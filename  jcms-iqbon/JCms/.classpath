@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry excluding="resource/|resources/" kind="src" path="src"/>
+	<classpathentry kind="src" path="test"/>
+	<classpathentry kind="src" path="src/resource"/>
+	<classpathentry kind="lib" path="lib/commons-lang3-3.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/log4j-1.2.16.jar"/>
+	<classpathentry kind="lib" path="lib/mysql-connector-java-5.1.18-bin.jar"/>
+	<classpathentry kind="lib" path="lib/org.springframework.beans-3.0.6.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/org.springframework.context-3.0.6.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/org.springframework.core-3.0.6.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/org.springframework.expression-3.0.6.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/org.springframework.jdbc-3.0.6.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/c3p0-0.9.1.2.jar"/>
+	<classpathentry kind="lib" path="lib/org.springframework.transaction-3.0.6.RELEASE.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>
+	<classpathentry kind="lib" path="lib/com.springsource.org.apache.commons.logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/org.springframework.asm-3.0.6.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/org.springframework.web-3.0.6.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/org.springframework.web.servlet-3.0.6.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/servlet-2_3-fcs-classfiles.jar"/>
+	<classpathentry kind="lib" path="lib/mockito-all-1.9.0.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
