@@ -23,13 +23,17 @@ import com.iqbon.jcms.util.KeyConstant;
  */
 public class AuthCodeServlet extends HttpServlet {
   /**
+   * 
+   */
+  private static final long serialVersionUID = 1L;
+  /**
    * 验证码图片的宽度
    */
-  private int width = 60;
+  private int width = 100;
   /**
    * 验证码图片的高度
    */
-  private int height = 20;
+  private int height = 30;
   /**
    * 验证码字符个数
    */
