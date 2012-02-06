@@ -25,7 +25,7 @@ public class User extends CMSDomain{
   
   private String lastLogin;
   
-  private int positionName;
+  private String positionName;
   
   private String password;
 
@@ -101,11 +101,11 @@ public class User extends CMSDomain{
     this.lastLogin = lastLogin;
   }
 
-  public int getPositionName() {
+  public String getPositionName() {
     return positionName;
   }
 
-  public void setPositionName(int positionName) {
+  public void setPositionName(String positionName) {
     this.positionName = positionName;
   }
 

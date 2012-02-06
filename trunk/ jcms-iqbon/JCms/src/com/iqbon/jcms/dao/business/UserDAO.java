@@ -1,9 +1,14 @@
 package com.iqbon.jcms.dao.business;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -11,6 +16,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import com.iqbon.jcms.domain.User;
+import com.iqbon.jcms.domain.mapRow.UserMapper;
 
 /**
  * 用户DAO类，自动加载
@@ -49,6 +55,53 @@ public class UserDAO{
   public int deleteUser(String userName) throws DataAccessException {
     String sql = "update bu_user set del = 1 where user_name = :userName";
     SqlParameterSource paramMap = new MapSqlParameterSource("userName", userName);
+    return namedParameterJdbcTemplate.update(sql, paramMap);
+  }
+
+  /**
+   * 根据用户名和密码验证用户
+   * @param userName
+   * @param password
+   * @return
+   */
+  public User validationUser(String userName, String password) {
+    String sql = "select user_name , bu_user.position_num ,email , telephone , position_name"
+        + " nickname, mobile from bu_user left join bu_position on bu_user.position_num = bu_position.position_num "
+        + " where bu_user.del = 0 and  bu_user.user_name = :userName and "
+        + "bu_user.password = password(:password)";
+    Map<String, String> map = new HashMap<String, String>();
+    map.put("userName", userName);
+    map.put("password", password);
+    SqlParameterSource paramMap = new MapSqlParameterSource(map);
+    RowMapper<User> mapper = new UserMapper();
+    try{
+      return (User) namedParameterJdbcTemplate.queryForObject(sql, paramMap, mapper);
+    }catch (EmptyResultDataAccessException e){
+      return null;
+    }
+  }
+
+  /**
+   * 根据用户名把用户数据彻底删除
+   * @param userName
+   * @return
+   */
+  public int deleteUserComplete(String userName) {
+    String sql = "delete from bu_user where user_name = :userName";
+    SqlParameterSource paramMap = new MapSqlParameterSource("userName", userName);
+    return namedParameterJdbcTemplate.update(sql, paramMap);
+  }
+
+  /**
+   * 更新用户信息
+   * @param user
+   * @return
+   */
+  public int updateUserInfo(User user) {
+    String sql = "update bu_user set password=password(:password) ,position_num=:positionNum ,"
+        + " email=:email , telephone=:telephone , mobile=:mobile , nickname=:nickName "
+        + "where user_name = :userName";
+    SqlParameterSource paramMap = new BeanPropertySqlParameterSource(user);
     return namedParameterJdbcTemplate.update(sql, paramMap);
   }
 }
