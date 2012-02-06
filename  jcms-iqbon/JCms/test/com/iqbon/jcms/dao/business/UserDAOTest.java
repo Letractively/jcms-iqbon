@@ -2,6 +2,7 @@ package com.iqbon.jcms.dao.business;
 
 import junit.framework.TestCase;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.log4j.Logger;
 
 import com.iqbon.jcms.domain.User;
@@ -33,5 +34,26 @@ public class UserDAOTest extends TestCase {
   public void testDeleteUser() {
     userDAO.deleteUser("testuser");
   }
+  
+  public void testUserValidation() {
+    User user = userDAO.validationUser("testuser", "test");
+    logger.info(ToStringBuilder.reflectionToString(user));
+  }
+  
+  public void testDeleteUserCompelete() {
+    int num = userDAO.deleteUserComplete("testuser");
+    logger.info(num);
+  }
 
+  public void testUpdateUserInfo() {
+    User user = new User();
+    user.setUserName("testuser");
+    user.setNickName("testname");
+    user.setPassword("test");
+    user.setPositionNum(1);
+    user.setAddUser("admin");
+    user.setEmail("test@test");
+ 
+    logger.info(userDAO.updateUserInfo(user));
+  }
 }
