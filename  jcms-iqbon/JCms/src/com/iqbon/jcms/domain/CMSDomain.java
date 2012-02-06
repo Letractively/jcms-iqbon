@@ -12,7 +12,6 @@ public class CMSDomain implements Serializable {
   private HashMap<String, Object> record;
   
   /**
-   * 根据KEY 获取对象
    * @param key
    * @return
    */
@@ -24,7 +23,6 @@ public class CMSDomain implements Serializable {
   }
   
   /**
-   * 根据Key 获取String
    * @param key
    * @return
    */
@@ -40,24 +38,23 @@ public class CMSDomain implements Serializable {
   }
   
   /**
-   * 根据 KEY 返回Int
    * @param key
    * @return
    * @throws Exception
    */
   public int getInt(String key) throws Exception{
     if (record == null) {
-      throw new Exception("record记录为空");
+      throw new Exception("record涓虹┖");
+      
     }
     Object value = record.get(key);
     if (value == null) {
-       throw new Exception("找不到记录");
+       throw new Exception(key + "涓虹┖");
     }
     return Integer.valueOf(String.valueOf(value));
   }
   
   /**
-   * 按照Key 设置value
    * @param key
    * @param value
    * @return
