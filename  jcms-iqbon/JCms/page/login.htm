@@ -54,7 +54,7 @@ input.primary {
 <body>
 <div id="login">
 
-<form name="loginform" id="loginform" action="/user/login.do" method="post">
+<form name="loginform" id="loginform" action="/admin/user/login.do" method="post">
 	<p>
 		<label>用户名<br />
 		<input type="text" name="userName" id="userName" value="" size="20" tabindex="10" /></label>
@@ -70,7 +70,7 @@ input.primary {
 		<span style="margin-right:6px;margin-bottom:0px;"><img id="authImg" src="/authCode" />&nbsp;&nbsp;<a href="javascript:changeImg();">换张图片</a></span>
 		</label>
 	</p>
-	<p><label><input name="rememberme" type="checkbox" id="rememberme" value="forever" tabindex="90" /> 记住我的用户名</label></p>
+	<p><label><input name="remember" type="checkbox" id="remember" value="1" tabindex="90" /> 记住我的用户名</label></p>
 	<p style="margin-left:80px">
 		<input class="primary" type="submit" name="submit" id="submit" class="button-primary" value="登录" tabindex="100" />
 		&nbsp;&nbsp;<a href="#">忘记密码</a>
