@@ -1,8 +1,11 @@
 package com.iqbon.jcms.dao.business;
 
+import java.util.Date;
+
 import junit.framework.TestCase;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.log4j.Logger;
 
 import com.iqbon.jcms.domain.User;
@@ -55,5 +58,11 @@ public class UserDAOTest extends TestCase {
     user.setEmail("test@test");
  
     logger.info(userDAO.updateUserInfo(user));
+  }
+  public void testUpdaeUserLastLogin() {
+    int num = userDAO
+        .updaeUserLastLogin("testuser", DateFormatUtils.ISO_DATETIME_FORMAT
+        .format(new Date()));
+    logger.info(num);
   }
 }
