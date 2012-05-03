@@ -6,10 +6,10 @@
 <title>JCMS后台管理系统</title>
 </head>
 <frameset rows="35,*,35" frameborder="0" border="0" framespacing="0">
-<frame src="/user/userSessionInfo.do" scrolling="no"/>
+<frame src="/admin/user/userSessionInfo.do" scrolling="no"/>
 <frameset cols="160,*">
-<frame src="/topic/leftMenu.do" scrolling="no" />
-<frame src="/jsp/admin/main.do" scrolling="no"  />
+<frame src="/admin/common/leftMenu.do" scrolling="no" />
+<frame src="/admin/main.do" scrolling="no" name="mainFrame" />
 </frameset>
 <frame src="/jsp/admin/footer.html" scrolling="no"  />
 </frameset>
