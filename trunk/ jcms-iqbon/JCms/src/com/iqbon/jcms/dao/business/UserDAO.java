@@ -104,4 +104,19 @@ public class UserDAO{
     SqlParameterSource paramMap = new BeanPropertySqlParameterSource(user);
     return namedParameterJdbcTemplate.update(sql, paramMap);
   }
+
+  /**
+   * 更新用户最后登录时间
+   * @param userName
+   * @param lastLogin
+   * @return
+   */
+  public int updaeUserLastLogin(String userName, String lastLogin) {
+    String sql = "update bu_user set last_login=:lastLogin where user_name=:userName";
+    Map<String, String> map = new HashMap<String, String>();
+    map.put("lastLogin", lastLogin);
+    map.put("userName", userName);
+    SqlParameterSource paramMap = new MapSqlParameterSource(map);
+    return namedParameterJdbcTemplate.update(sql, paramMap);
+  }
 }

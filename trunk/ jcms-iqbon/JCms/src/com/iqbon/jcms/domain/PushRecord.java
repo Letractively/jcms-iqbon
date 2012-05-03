@@ -19,7 +19,7 @@ public class PushRecord extends CMSDomain {
    
    private String url;
    
-   private String subTile;
+   private String subTitle;
    
    private String addDate;
    
@@ -30,6 +30,8 @@ public class PushRecord extends CMSDomain {
    private String topicid;
    
    private String img;
+   
+   private int type;
 
   public int getIndexid() {
     return indexid;
@@ -79,12 +81,12 @@ public class PushRecord extends CMSDomain {
     this.url = url;
   }
 
-  public String getSubTile() {
-    return subTile;
+  public String getSubTitle() {
+    return subTitle;
   }
 
-  public void setSubTile(String subTile) {
-    this.subTile = subTile;
+  public void setSubTitle(String subTitle) {
+    this.subTitle = subTitle;
   }
 
   public String getAddDate() {
@@ -125,5 +127,13 @@ public class PushRecord extends CMSDomain {
 
   public void setImg(String img) {
     this.img = img;
+  }
+
+  public int getType() {
+    return type;
+  }
+
+  public void setType(int type) {
+    this.type = type;
   }
 }
