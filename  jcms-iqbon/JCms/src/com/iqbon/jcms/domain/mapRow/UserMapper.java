@@ -7,6 +7,11 @@ import org.springframework.jdbc.core.RowMapper;
 
 import com.iqbon.jcms.domain.User;
 
+/**
+ * 用户的映射类
+ * @author hp
+ *
+ */
 public class UserMapper implements RowMapper<User> {
 
   @Override

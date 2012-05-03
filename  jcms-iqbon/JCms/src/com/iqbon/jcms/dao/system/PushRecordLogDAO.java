@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
  *
  */
 @Repository
-public class PushRecordDAO {
+public class PushRecordLogDAO {
   private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
   @Autowired
