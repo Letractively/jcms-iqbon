@@ -15,8 +15,15 @@ public class UserDAOTest extends TestCase {
 
   private static Logger logger = Logger.getLogger(UserDAOTest.class);
   UserDAO userDAO;
+  User user;
   protected void setUp() throws Exception {
     userDAO = (UserDAO) BeanFactory.getBean("userDAO");
+    user = new User();
+    user.setUserName("testuser");
+    user.setNickName("testname");
+    user.setPassword("test");
+    user.setPositionNum(1);
+    user.setAddUser("admin");
     super.setUp();
   }
 
@@ -25,12 +32,7 @@ public class UserDAOTest extends TestCase {
   }
 
   public void testInsertUser() {
-    User user = new User();
-    user.setUserName("testuser");
-    user.setNickName("testname");
-    user.setPassword("test");
-    user.setPositionNum(1);
-    user.setAddUser("admin");
+    
     logger.info(userDAO.insertUser(user));
   }
 
@@ -44,19 +46,11 @@ public class UserDAOTest extends TestCase {
   }
   
   public void testDeleteUserCompelete() {
-    int num = userDAO.deleteUserComplete("testuser");
+    int num = userDAO.deleteUserComplete(user.getUserName());
     logger.info(num);
   }
 
-  public void testUpdateUserInfo() {
-    User user = new User();
-    user.setUserName("testuser");
-    user.setNickName("testname");
-    user.setPassword("test");
-    user.setPositionNum(1);
-    user.setAddUser("admin");
-    user.setEmail("test@test");
- 
+  public void testUpdateUserInfo() {    
     logger.info(userDAO.updateUserInfo(user));
   }
   public void testUpdaeUserLastLogin() {

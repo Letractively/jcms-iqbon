@@ -52,7 +52,7 @@ public class TopicDAOTest extends TestCase {
   }
   
   public void testQuerySubTopic(){
-    List<Topic> list = topicDAO.querySubTopicList("12022822300000248P");
+    List<Topic> list = topicDAO.querySubTopicList("12022822300000248P", "12022822300000248P;");
     logger.info("list size:" + list.size());
     for (Topic topic : list) {
       logger.info(ToStringBuilder.reflectionToString(topic));
@@ -62,5 +62,15 @@ public class TopicDAOTest extends TestCase {
   public void testQueryTopicById() {
     Topic parentTopic = topicDAO.queryTopicById(topic.getTopicId());
     logger.info(ToStringBuilder.reflectionToString(parentTopic));
+  }
+  
+  public void testUpdateTopic(){
+    topic.setTopicName("修改测试栏目");
+    int num = topicDAO.updateTopic(topic);
+    logger.info(num);
+    Topic modifyTopic = topicDAO.queryTopicById(topic.getTopicId());
+    logger.info(ToStringBuilder.reflectionToString(modifyTopic));
+    topic.setTopicName("测试栏目");
+    topicDAO.updateTopic(topic);
   }
 }

@@ -76,5 +76,10 @@ public class PushRecordDAOTest extends TestCase {
         .getType());
     logger.info(num);
   }
+  
+  public void testQueryPushRecordNumByTopic() {
+    int num = pushRecordDAO.queryPushRecordNumByTopic(pushRecord.getTopicid());
+    logger.info(num);
+  }
 
 }
