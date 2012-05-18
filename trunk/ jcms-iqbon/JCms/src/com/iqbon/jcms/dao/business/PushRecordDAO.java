@@ -104,4 +104,17 @@ public class PushRecordDAO {
     map.put("type", type);
     return namedParameterJdbcTemplate.queryForInt(sql, map);
   }
+
+  /**
+   * 查看栏目中有多少推送记录
+   * @param topicid
+   * @return
+   */
+  public int queryPushRecordNumByTopic(String topicid) {
+    String sql = "select count(indexid) from bu_push_record where topicid = :topicid";
+    Map<String, String> map = new HashMap<String, String>();
+    map.put("topicid", topicid);
+    return namedParameterJdbcTemplate.queryForInt(sql, map);
+  }
+  
 }
