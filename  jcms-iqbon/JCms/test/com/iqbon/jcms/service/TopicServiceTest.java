@@ -34,7 +34,11 @@ public class TopicServiceTest extends TestCase {
   }
 
   public void testGetTopTopicList() {
-    fail("Not yet implemented");
+    List<Topic> list = topicService.getTopTopicList();
+    logger.info(list.size());
+    for (Topic topic : list) {
+      logger.info(ToStringBuilder.reflectionToString(topic));
+    }
   }
 
   public void testGetSubTopicList() {
@@ -43,6 +47,58 @@ public class TopicServiceTest extends TestCase {
     for(Topic topic:list ){
       logger.info(ToStringBuilder.reflectionToString(topic));
     }
+  }
+  
+  public void testAddTopic() {
+    String topicName = "测试子栏目";
+    String user = "zlliang";
+    
+    try {
+      String topicid = topicService.addTopic(topic.getTopicId(), topicName, user);
+      logger.info(topicid);
+    } catch (Exception e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    //测试增加根栏目
+    try {
+      String topicid = topicService.addTopic(null, topicName, user);
+      logger.info(topicid);
+    } catch (Exception e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    
+  }
+  
+  public void testDeleteTopic() {
+    String topicName = "测试子栏目";
+    String user = "zlliang";
+    try {
+      String topicid = topicService.addTopic(null, topicName, user);
+      int deletedNum = topicService.deleteTopic(topicid);
+      logger.info("topicid:" + topicid);
+      logger.info(deletedNum);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    try {
+      int deletedNum = topicService.deleteTopic(topic.getTopicId());
+      logger.info(deletedNum);
+    } catch (Exception e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    
+  }
+  
+  public void testModifyTopic() {
+    String topicName = "测试修改栏目2";
+    
+    String topicid = topic.getTopicId();
+    int num = topicService.modifyTopic(topicName, topicid, topic.getModifyUser());
+    logger.info(num);
+    topicService.modifyTopic(topic.getTopicName(), topic.getTopicId(), topic.getModifyUser());
   }
 
 }
