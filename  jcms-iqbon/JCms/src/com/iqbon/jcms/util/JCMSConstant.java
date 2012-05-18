@@ -11,6 +11,7 @@ import org.apache.commons.lang3.time.DateFormatUtils;
  *
  */
 public class JCMSConstant {
+  
   private static String host = "/";
 
   /**
@@ -20,6 +21,13 @@ public class JCMSConstant {
   public static String getHost() {
     return host;
   }
+
+  /**
+   * 推送记录类型
+   */
+  public static enum PUSH_RECORD_TYPE {
+    emptyDoc, doc, model
+  };
 
   /**
    * 生成一个topicID

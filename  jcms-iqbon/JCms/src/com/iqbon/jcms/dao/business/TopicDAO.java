@@ -59,11 +59,11 @@ public class TopicDAO {
    * @param topicId
    * @return
    */
-  public List<Topic> querySubTopicList(String topicId) {
-    String sql = "select * from bu_topic where topicid <> :topicId and topic_tree like ':topicTree' order by topic_name desc";
+  public List<Topic> querySubTopicList(String topicId, String topicTree) {
+    String sql = "select * from bu_topic where topicid <> :topicId and topic_tree like :topicTree order by topic_name desc";
     Map<String, String> map = new HashMap<String, String>();
     map.put("topicId", topicId);
-    map.put("topicTree", topicId + ";%");
+    map.put("topicTree", topicTree + "%");
     return namedParameterJdbcTemplate.query(sql, map, new TopicMapper());
   }
 
@@ -78,7 +78,7 @@ public class TopicDAO {
     map.put("topicId", topicid);
     return namedParameterJdbcTemplate.update(sql, map);
   }
-  
+
   /**
    * 根据ID查找栏目
    * @param topicid
@@ -89,5 +89,17 @@ public class TopicDAO {
     Map<String, String> map = new HashMap<String, String>();
     map.put("topicid", topicid);
     return namedParameterJdbcTemplate.queryForObject(sql, map, new TopicMapper());
+   }
+
+  /**
+   * 更新栏目信息
+   * @param topic
+   * @return
+   */
+  public int updateTopic(Topic topic) {
+    String sql = "update bu_topic set topic_name = :topicName, modify_user=:modifyUser,last_modify = now() "
+        + "where topicid=:topicId";
+    SqlParameterSource paramMap = new BeanPropertySqlParameterSource(topic);
+    return namedParameterJdbcTemplate.update(sql, paramMap);
   }
 }
