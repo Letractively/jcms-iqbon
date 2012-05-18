@@ -4,7 +4,8 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link  type="text/css" rel="stylesheet" href="../../css/main.css"/>
+<link  type="text/css" rel="stylesheet" href="/css/main.css"/>
+<link  type="text/css" rel="stylesheet" href="/css/colorbox.css"/>
 <title>JCMS栏目页</title>
 </head>
 <body>
@@ -24,22 +25,22 @@
 <div id="tableTop">
 	<ul>
 	<li><input type="checkbox" /></li>
-	<li style="width:10%"> 类型 </li>
-	<li style="width:45%"> 名称 </li>
-	<li style="width:15%">最后修改</li>
-	<li style="width:15%">发布时间</li>
+	<li style="width:35%"> 名称 </li>
+	<li style="width:20%">最后修改</li>
+	<li style="width:20%">发布时间</li>
 	<li style="width:10%"> 权重 </li>
+	<li style="width:10%"> 用户 </li>
 	</ul>
 </div>
 <div id="tableContent">
 <c:forEach var="topic" items="${subTopicList}">
 <ul>
 	<li><input type="checkbox" /></li>
-	<li style="width:10%"> 栏目 </li>
-	<li style="width:45%"> ${topic.topicName} </li>
-	<li style="width:15%">${topic.lastModify}</li>
-	<li style="width:15%"></li>
+	<li style="width:35%"> <a href="/admin/topic/topicPage.do?pageNum=1&type=1&topicid=${topic.topicId }"><img src="/images/folderopen.gif"/>&nbsp;&nbsp;${topic.topicName}</a> </li>
+	<li style="width:20%">${topic.lastModify}</li>
+	<li style="width:20%"></li>
 	<li style="width:10%">  </li>
+	<li style="width:10%">${topic.modifyUser} </li>
 	</ul>
 </c:forEach>
 </div>
@@ -48,4 +49,6 @@
 	<span  style="width:95%"> 第<input type="text"  size="3" value="1"/>页 <input type="button" value="Go"/> 共1页  </span>
 </div>
 </body>
+<script src="/js/jquery.js"></script>
+<script src="/js/jquery.colorbox-min.js"></script>
 </html>
