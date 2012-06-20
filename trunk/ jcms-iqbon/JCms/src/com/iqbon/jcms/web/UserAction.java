@@ -9,6 +9,7 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,16 +22,13 @@ import com.iqbon.jcms.util.JCMSConstant;
 import com.iqbon.jcms.util.KeyConstant;
 
 @Controller
+@Scope("prototype")
 @RequestMapping("/admin/user")
 public class UserAction {
 
   private Logger logger = Logger.getLogger(UserAction.class);
-  private UserService userService;
-  
   @Autowired
-  public void setUserService(UserService userService) {
-    this.userService = userService;
-  }
+  private UserService userService;
 
   /**
    * 用户登录

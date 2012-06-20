@@ -21,18 +21,10 @@ import com.iqbon.jcms.util.JCMSConstant;
 public class TopicService {
   
   private Logger logger = Logger.getLogger(TopicService.class);
+  @Autowired
   private TopicDAO topicDAO;
+  @Autowired
   private PushRecordDAO pushRecordDAO;
-
-  @Autowired
-  public void setTopicDAO(TopicDAO topicDAO) {
-    this.topicDAO = topicDAO;
-  }
-  
-  @Autowired
-  public void setPushRecordDAO(PushRecordDAO pushRecordDAO) {
-    this.pushRecordDAO = pushRecordDAO;
-  }
 
   /**
    * 查找所有顶级栏目

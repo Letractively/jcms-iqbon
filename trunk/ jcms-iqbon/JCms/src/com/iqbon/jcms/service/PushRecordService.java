@@ -17,12 +17,8 @@ import com.iqbon.jcms.domain.PushRecord;
 @Service
 public class PushRecordService {
   
-  private PushRecordDAO pushRecordDAO;
-
   @Autowired
-  public void setPushRecordDAO(PushRecordDAO pushRecordDAO) {
-    this.pushRecordDAO = pushRecordDAO;
-  }
+  private PushRecordDAO pushRecordDAO;
 
   /**
    * 

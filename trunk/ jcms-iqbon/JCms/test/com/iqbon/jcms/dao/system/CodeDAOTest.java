@@ -42,8 +42,9 @@ public class CodeDAOTest extends TestCase {
     logger.info(codeDAO.deleteCodeByGroup(code.getGroupName()));
   }
 
-  public void testQueryCodeByGroup() {
-    List<Code> list = codeDAO.queryCodeByGroup(code.getGroupName());
+  public void testQuerySubCodeByGroupAndParent() {
+    List<Code> list = codeDAO
+        .querySubCodeByGroupAndParent(code.getGroupName(), code.getParentKey());
     logger.info(list.size());
     for (Code code : list) {
       logger.info(ToStringBuilder.reflectionToString(code));

@@ -11,12 +11,9 @@ import com.iqbon.jcms.domain.User;
 
 @Service
 public class UserService {
-  private UserDAO userDAO;
-
+  
   @Autowired
-  public void setUserDAO(UserDAO userDAO) {
-    this.userDAO = userDAO;
-  }
+  private UserDAO userDAO;
 
   /**
    * 根据用户名和密码验证用户是否存在，存在则返回用户相关信息<br/>

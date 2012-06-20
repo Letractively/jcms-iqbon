@@ -19,8 +19,8 @@ public class ActionUtil {
    * @return
    */
   public static int countTotalPageNum(int totalNum, int pageSize) {
-    if (pageSize <= 0) {
-      return 0;
+    if (pageSize <= 0||totalNum == 0) {
+      return 1;
     } else {
       if (totalNum % pageSize > 0) {
         return (totalNum / pageSize) + 1;
