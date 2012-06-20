@@ -13,6 +13,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import com.googlecode.ehcache.annotations.Cacheable;
+import com.googlecode.ehcache.annotations.TriggersRemove;
 import com.iqbon.jcms.domain.Code;
 import com.iqbon.jcms.domain.mapRow.CodeMapper;
 
@@ -36,6 +37,7 @@ public class CodeDAO {
    * @param code
    * @return
    */
+  @TriggersRemove(cacheName = "codeCache", removeAll = true)
   public int insertCode(Code code) {
     String sql = "insert into sys_code(group_name,`key`,`value`,parent_key) values (:groupName,:key,:value,:parentKey)";
     SqlParameterSource paramMap = new BeanPropertySqlParameterSource(code);
@@ -62,6 +64,7 @@ public class CodeDAO {
    * @param groupName
    * @return
    */
+  @TriggersRemove(cacheName = "codeCache", removeAll = true)
   public int deleteCodeByGroup(String groupName) {
     String sql = "delete from sys_code where group_name =:groupName";
     Map<String, String> map = new HashMap<String, String>();
@@ -70,25 +73,28 @@ public class CodeDAO {
   }
 
   /**
-   * 按组查找系统码
+   * 根据参数组名和父参数，获取所有子参数
    * @param groupName
    * @return
    */
-  public List<Code> queryCodeByGroup(String groupName) {
-    String sql = "select group_name,`key`,`value`,parent_key from sys_code where group_name = :groupName";
+  @Cacheable(cacheName = "codeCache")
+  public List<Code> querySubCodeByGroupAndParent(String groupName,String parentKey) {
+    String sql = "select group_name,`key`,`value`,parent_key from sys_code where group_name = :groupName and parent_key = :parentKey and parent_key!=''";
     Map<String, String> map = new HashMap<String, String>();
     map.put("groupName", groupName);
+    map.put("parentKey", parentKey);
     return namedParameterJdbcTemplate.query(sql, map, new CodeMapper());
   }
 
   /**
-   * 获取系统中所有的组
+   * 获取系统中所有的系统码组
    * @return
    */
   @Cacheable(cacheName = "codeCache")
   public List<Code> queryAllGroup() {
-    String sql = "select group_name,`key`,`value`,parent_key , group_name from sys_code where parent_key = group_name";
+    String sql = "select group_name,`key`,`value`,parent_key , group_name from sys_code where parent_key = ''";
     Map<String, String> map = new HashMap<String, String>();
     return namedParameterJdbcTemplate.query(sql, map, new CodeMapper());
   }
+
 }
