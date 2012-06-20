@@ -5,11 +5,11 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>JCMS后台管理系统</title>
 </head>
-<frameset rows="35,*,35" frameborder="0" border="0" framespacing="0">
+<frameset rows="40,*,35" frameborder="0" border="0" framespacing="0">
 <frame src="/admin/user/userSessionInfo.do" scrolling="no"/>
-<frameset cols="160,*">
-<frame src="/admin/common/leftMenu.do" scrolling="no" />
-<frame src="/admin/main.do" scrolling="no" name="mainFrame" />
+<frameset cols="170,*">
+<frame src="/admin/common/leftMenu.do" scrolling="auto"/>
+<frame src="/admin/main.do" scrolling="auto" name="mainFrame" />
 </frameset>
 <frame src="/jsp/admin/footer.html" scrolling="no"  />
 </frameset>

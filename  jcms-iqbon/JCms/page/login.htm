@@ -1,86 +1,49 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<link  type="text/css" rel="stylesheet" href="css/main.css"/>
-<style>
-form {
-    -moz-border-radius: 11px 11px 11px 11px;
-    -moz-box-shadow: 0 4px 18px #666666;
-	background: none repeat scroll 0 0 #FFFFFF;
-	border: 1px solid #E5E5E5;
-	font-weight: normal;
-	margin-left: 400px;
-	padding: 16px 16px 40px;
-	width:400px;
-	margin-top:100px;
-	margin-left:400px;
-}
-label {
-    color: #777777;
-    font-size: 13px;
-}
-#userName, #password {
-	background: none repeat scroll 0 0 #FBFBFB;
-	border: 1px solid #CCCCCC;
-	font-size: 24px;
-	margin-bottom: 16px;
-	margin-right: 6px;
-	margin-top: 2px;
-	padding: 3px;
-	width: 97%;
-}
-#authCode {
-	background: none repeat scroll 0 0 #FBFBFB;
-	border: 1px solid #CCCCCC;
-	font-size: 24px;
-	margin-bottom: 16px;
-	margin-right: 6px;
-	margin-top: 2px;
-	padding: 3px;
-	width: 200px;
-}
-input.primary {
-	background-color: #FBFBFB;
-	-moz-border-radius:11px 11px 11px 11px;
-	border:1px solid;
-	cursor:pointer;
-	padding:3px 10px;
-	color:#555555;
-}
-</style>
+<link href="/css/bootstrap.min.css" rel="stylesheet">
+<link href="/css/bootstrap-responsive.min.css" rel="stylesheet">
 <title>JCMS后台管理登录</title>
 </head>
 <body>
-<div id="login">
-
-<form name="loginform" id="loginform" action="/admin/user/login.do" method="post">
+<div class="row-fluid">
+<div class="span12">
+<div class="span3"><h3>欢迎使用JCMS系统</h3></div>
+<div class="span6">
+<p style="margin-top:100px;">
+<img src="/images/LogoSmall.png">
+</p>
+<form class="well" name="loginform" id="loginform" action="/admin/user/login.do" method="post">
 	<p>
-		<label>用户名<br />
-		<input type="text" name="userName" id="userName" value="" size="20" tabindex="10" /></label>
+		<label>用户名<br /></label>
+		<input type="text" name="userName" id="userName" value="" size="20" tabindex="10" placeholder="用户名"/>
 	</p>
 	<p>
 		<label>密码<br />
-		<input type="password" name="password" id="password" cvalue="" size="20" tabindex="20" /></label>
+		<input type="password" name="password" id="password" cvalue="" size="20" tabindex="20" placeholder="****"/></label>
 
 	</p>
 	<p>
-		<label>验证码<br/>
-		<span><input type="text" name="authCode" id="authCode" size="20" tabindex="30" /></span>
-		<span style="margin-right:6px;margin-bottom:0px;"><img id="authImg" src="/authCode" />&nbsp;&nbsp;<a href="javascript:changeImg();">换张图片</a></span>
-		</label>
-	</p>
-	<p><label><input name="remember" type="checkbox" id="remember" value="1" tabindex="90" /> 记住我的用户名</label></p>
+		<label>验证码<br/></label>
+		<input type="text" name="authCode" id="authCode" size="20" tabindex="30" />
+		<span class="help-inline"><img id="authImg" src="/authCode" />&nbsp;&nbsp;<a href="javascript:changeImg();">换张图片</a></span>
+		
+	</p>	
+	<label class=checkbox"><input style="display:inline-block" name="remember" type="checkbox" id="remember" value="1" tabindex="90" />记住我的用户名</label>
 	<p style="margin-left:80px">
-		<input class="primary" type="submit" name="submit" id="submit" class="button-primary" value="登录" tabindex="100" />
+		<input class="btn" type="submit" name="submit" id="submit" value="登录" tabindex="100" />
 		&nbsp;&nbsp;<a href="#">忘记密码</a>
 	</p>
 </form>
 </div>
+</div>
+</div>
 
 						
 </body>
-<script language="javascript" src="js/jquery.js" type="text/javascript"></script>
+<script language="javascript" src="/js/jquery.js" type="text/javascript"></script>
+<script language="javascript" src="/js/bootstrap.min.js" type="text/javascript"></script>
 <script language="javascript">
 //更换验证码
 function changeImg(){
