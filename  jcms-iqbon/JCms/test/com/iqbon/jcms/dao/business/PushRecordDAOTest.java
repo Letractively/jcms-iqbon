@@ -1,5 +1,6 @@
 package com.iqbon.jcms.dao.business;
 
+import java.util.Arrays;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -9,7 +10,7 @@ import org.apache.log4j.Logger;
 
 import com.iqbon.jcms.domain.PushRecord;
 import com.iqbon.jcms.util.BeanFactory;
-import com.iqbon.jcms.web.util.ActionUtil;
+import com.iqbon.jcms.web.util.Page;
 
 public class PushRecordDAOTest extends TestCase {
 
@@ -54,8 +55,9 @@ public class PushRecordDAOTest extends TestCase {
    * 测试根据栏目查询推送记录
    */
   public void testQueryDocPushRecordByTopic() {
+    Page page = new Page(10, 1);
     List<PushRecord> list = pushRecordDAO.queryDocPushRecordByTopic(pushRecord.getTopicid(), 0,
-        ActionUtil.DEFAUL_PAGE_SIZE);
+        page.getPageSize());
     logger.info(list.size());
     for (PushRecord pushRecord : list) {
       logger.info(ToStringBuilder.reflectionToString(pushRecord));
@@ -63,8 +65,9 @@ public class PushRecordDAOTest extends TestCase {
   }
   
   public void testQueryModelPushRecordByTopic() {
+    Page page = new Page(10, 1);
     List<PushRecord> list = pushRecordDAO.queryModelPushRecordByTopic(pushRecord.getTopicid(), 0,
-        ActionUtil.DEFAUL_PAGE_SIZE);
+        page.getPageSize());
     logger.info(list.size());
     for (PushRecord pushRecord : list) {
       logger.info(ToStringBuilder.reflectionToString(pushRecord));
@@ -82,4 +85,28 @@ public class PushRecordDAOTest extends TestCase {
     logger.info(num);
   }
 
+  public void testUpdatePushRecord() {
+    pushRecord.setTitle("更新标题");
+    pushRecord.setIndexid(6);
+    int num = pushRecordDAO.updatePushRecord(pushRecord);
+    logger.info(num);
+  }
+
+  public void testQueryPushRecordById() {
+    PushRecord pushRecord = pushRecordDAO.queryPushRecordById(7);
+    logger.info(ToStringBuilder.reflectionToString(pushRecord));
+  }
+
+  public void testQueryPushRecordsById() {
+    String[] indexList = {"1","2"};
+    List<PushRecord> list = pushRecordDAO.queryPushRecordsById(Arrays.asList(indexList));
+    for(PushRecord p:list){
+      logger.info(ToStringBuilder.reflectionToString(p));
+    }
+  }
+
+  public void testDeletePushRecords() {
+    int number = pushRecordDAO.deletePushRecords(null);
+    logger.info(number);
+  }
 }

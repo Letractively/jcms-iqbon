@@ -1,11 +1,6 @@
 package com.iqbon.jcms.domain;
 
 public class Topic extends CMSDomain {
-
- /**
-   * 
-   */
-  private static final long serialVersionUID = 1L;
   
   private String topicId;
   
@@ -16,6 +11,16 @@ public class Topic extends CMSDomain {
   private String modifyUser;
   
   private String topicTree;
+
+  private String parentTopic;
+
+  public String getParentTopic() {
+    return parentTopic;
+  }
+
+  public void setParentTopic(String parentTopic) {
+    this.parentTopic = parentTopic;
+  }
 
   public String getTopicId() {
     return topicId;

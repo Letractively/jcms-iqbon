@@ -40,9 +40,7 @@ public class TopicService {
    * @return
    */
   public List<Topic> getSubTopicList(String topicId) {
-    Topic topic = topicDAO.queryTopicById(topicId);
-    String topicTree = topic.getTopicTree();
-    return topicDAO.querySubTopicList(topicId, topicTree);
+    return topicDAO.querySubTopicList(topicId);
   }
 
   /**
@@ -69,6 +67,7 @@ public class TopicService {
     topic.setTopicTree(topicTree);
     topic.setModifyUser(user);
     topic.setTopicName(topicName);
+    topic.setParentTopic(parentTopicid);
     int num = topicDAO.insertTopic(topic);
     if (num == 0) {
       throw new Exception(parentTopicid + "增加子栏目失败");
@@ -105,5 +104,23 @@ public class TopicService {
     topic.setTopicName(topicName);
     topic.setModifyUser(user);
     return topicDAO.updateTopic(topic);
+  }
+
+  /**
+   * 获取栏目信息
+   * @param topicid
+   * @return
+   */
+  public Topic getTopicInfo(String topicid) {
+    return topicDAO.queryTopicById(topicid);
+  }
+
+  /**
+   * 批量删除栏目
+   * @param topicList
+   * @return
+   */
+  public int batchDeleteTopics(List<String> topicList) {
+    return topicDAO.batchDeleteTopic(topicList);
   }
 }

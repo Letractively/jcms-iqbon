@@ -36,7 +36,7 @@ public class TopicDAO {
    * @return
    */
   public List<Topic> queryTopTopicList() {
-    String sql = "select * from bu_topic where length(topic_tree) = 19 order by topic_name desc";
+    String sql = "select * from bu_topic where parent_topic is null order by topic_name desc";
     Map<String, String> map = new HashMap<String, String>();
     SqlParameterSource paramMap = new MapSqlParameterSource(map);
     return namedParameterJdbcTemplate.query(sql, paramMap, new TopicMapper());
@@ -48,8 +48,8 @@ public class TopicDAO {
    * @return
    */
   public int insertTopic(Topic topic) {
-    String sql = "insert into bu_topic(topicid,topic_name,last_modify,modify_user,topic_tree)"
-        + " values (:topicId,:topicName,now(),:modifyUser,:topicTree)";
+    String sql = "insert into bu_topic(topicid,topic_name,last_modify,modify_user,topic_tree,parent_topic)"
+        + " values (:topicId,:topicName,now(),:modifyUser,:topicTree,:parentTopic)";
     SqlParameterSource paramMap = new BeanPropertySqlParameterSource(topic);
     return namedParameterJdbcTemplate.update(sql, paramMap);
   }
@@ -59,11 +59,10 @@ public class TopicDAO {
    * @param topicId
    * @return
    */
-  public List<Topic> querySubTopicList(String topicId, String topicTree) {
-    String sql = "select * from bu_topic where topicid <> :topicId and topic_tree like :topicTree order by topic_name desc";
+  public List<Topic> querySubTopicList(String topicId) {
+    String sql = "select * from bu_topic where parent_topic = :topicId  order by topic_name desc";
     Map<String, String> map = new HashMap<String, String>();
     map.put("topicId", topicId);
-    map.put("topicTree", topicTree + "%");
     return namedParameterJdbcTemplate.query(sql, map, new TopicMapper());
   }
 
@@ -77,6 +76,23 @@ public class TopicDAO {
     Map<String, String> map = new HashMap<String, String>();
     map.put("topicId", topicid);
     return namedParameterJdbcTemplate.update(sql, map);
+  }
+  
+  /**
+   * 批量删除栏目
+   * @param topicList
+   * @return
+   */
+  @SuppressWarnings("unchecked")
+  public int batchDeleteTopic(List<String> topicList) {
+    String sql = "delete from bu_topic where topicid = :topicId";
+    Map<String, String>[] mapArray = new HashMap[topicList.size()];
+    for (int i = 0; i < mapArray.length; i++) {
+      Map<String, String> map = new HashMap<String, String>();
+      map.put("topicId", topicList.get(i));
+      mapArray[i] = map;
+    }
+    return namedParameterJdbcTemplate.batchUpdate(sql, mapArray).length;
   }
 
   /**

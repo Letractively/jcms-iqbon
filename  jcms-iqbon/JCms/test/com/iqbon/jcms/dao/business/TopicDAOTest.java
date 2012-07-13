@@ -1,5 +1,6 @@
 package com.iqbon.jcms.dao.business;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -9,6 +10,7 @@ import org.apache.log4j.Logger;
 
 import com.iqbon.jcms.domain.Topic;
 import com.iqbon.jcms.util.BeanFactory;
+import com.iqbon.jcms.util.JCMSConstant;
 
 public class TopicDAOTest extends TestCase {
   
@@ -20,11 +22,12 @@ public class TopicDAOTest extends TestCase {
   protected void setUp() throws Exception {
     topicDAO = (TopicDAO) BeanFactory.getBean("topicDAO");
     topic = new Topic();
-    String topicid = "12022822300000248P";//JCMSConstant.createTopicId();
+    String topicid = JCMSConstant.createTopicId();
     topic.setTopicId(topicid);
     topic.setTopicName("测试栏目");
     topic.setTopicTree(topicid+";");
-    topic.setModifyUser("zlliang");
+    topic.setModifyUser("testuser");
+    topic.setTopicTree("");
     super.setUp();
   }
 
@@ -52,7 +55,7 @@ public class TopicDAOTest extends TestCase {
   }
   
   public void testQuerySubTopic(){
-    List<Topic> list = topicDAO.querySubTopicList("12022822300000248P", "12022822300000248P;");
+    List<Topic> list = topicDAO.querySubTopicList("1206282306000040cl");
     logger.info("list size:" + list.size());
     for (Topic topic : list) {
       logger.info(ToStringBuilder.reflectionToString(topic));
@@ -72,5 +75,14 @@ public class TopicDAOTest extends TestCase {
     logger.info(ToStringBuilder.reflectionToString(modifyTopic));
     topic.setTopicName("测试栏目");
     topicDAO.updateTopic(topic);
+  }
+
+  public void testBatchDeleteTopic() {
+    List<Topic> list = topicDAO.querySubTopicList("1206282306000040cl");
+    List<String> idList = new ArrayList<String>();
+    for (Topic topic : list) {
+      idList.add(topic.getTopicId());
+    }
+    topicDAO.batchDeleteTopic(idList);
   }
 }

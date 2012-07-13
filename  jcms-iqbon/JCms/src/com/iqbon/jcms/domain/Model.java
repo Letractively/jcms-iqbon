@@ -2,10 +2,6 @@ package com.iqbon.jcms.domain;
 
 public class Model extends CMSDomain {
 
-  /**
-   * 
-   */
-  private static final long serialVersionUID = 1L;
   private String modelName  ;
   private String content;
   private String lastModify;
@@ -17,6 +13,33 @@ public class Model extends CMSDomain {
   private String keword;
   private String timeout;
   private int rate;
+  private String topicid;
+  private String extname;
+  private String addTime;
+
+  public String getTopicid() {
+    return topicid;
+  }
+
+  public void setTopicid(String topicid) {
+    this.topicid = topicid;
+  }
+
+  public String getExtname() {
+    return extname;
+  }
+
+  public void setExtname(String extname) {
+    this.extname = extname;
+  }
+
+  public String getAddTime() {
+    return addTime;
+  }
+
+  public void setAddTime(String addTime) {
+    this.addTime = addTime;
+  }
   public String getModelName() {
     return modelName;
   }

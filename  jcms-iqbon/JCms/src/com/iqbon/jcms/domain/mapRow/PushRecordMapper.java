@@ -24,6 +24,7 @@ public class PushRecordMapper implements RowMapper<PushRecord> {
     pushRecord.setAddDate(rs.getString("add_date"));
     pushRecord.setModifyUser(rs.getString("modify_user"));
     pushRecord.setType(rs.getInt("type"));
+    pushRecord.setImg(rs.getString("img"));
     return pushRecord;
     
   }

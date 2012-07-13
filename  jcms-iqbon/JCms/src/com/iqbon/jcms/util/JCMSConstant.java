@@ -39,4 +39,12 @@ public class JCMSConstant {
     String random = RandomStringUtils.randomAlphanumeric(2);
     return dateStr + random;
   }
+
+  /**
+   * 用户复制动作的类型
+   *
+   */
+  public static enum CopyType {
+    copy, cut
+  };
 }
