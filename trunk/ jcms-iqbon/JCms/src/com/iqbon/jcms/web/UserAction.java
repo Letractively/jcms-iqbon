@@ -6,7 +6,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.BooleanUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -43,17 +42,13 @@ public class UserAction {
       HttpServletRequest request,
       HttpServletResponse response) {
     ModelAndView view = new ModelAndView();
-    if (StringUtils.isEmpty(userName) || StringUtils.isEmpty(password)
-        || StringUtils.isEmpty(authCode)) {
-      view.setViewName(KeyConstant.ERROR_PAGE);
-    } else {
-      User user = userService.UserValidation(userName, password);
-      if (user == null) {//用户不存在
+    User user = userService.UserValidation(userName, password);
+    if (user == null) {//用户不存在
         view.setViewName(KeyConstant.ERROR_PAGE);
       } else {
         HttpSession session = request.getSession();
         if (authCode.equals(session.getAttribute(KeyConstant.SESSION_KEY_AUTH_CODE))) {
-          if (BooleanUtils.isTrue(remember)) {//保存记住用户名的cookie
+        if (BooleanUtils.isTrue(remember)) {//保存记住用户名的cookie
             Cookie cookie = new Cookie(KeyConstant.COOKIE_KEY_USERNAME, userName);
             cookie.setMaxAge(3600 * 24 * 7);
             cookie.setPath(JCMSConstant.getHost());
@@ -63,11 +58,10 @@ public class UserAction {
           session.setAttribute(KeyConstant.SESSION_KEY_USER, user);
           view.setViewName("redirect:/admin/common/index.do");
           logger.info("user:" + user.getUserName() + "login");
-        } else {//验证码错误
+      } else {//验证码错误
           view.setViewName(KeyConstant.ERROR_PAGE);
         }
       }      
-    }
     return view;
   }
 

@@ -17,11 +17,12 @@ import org.springframework.web.servlet.ModelAndView;
 import com.iqbon.jcms.domain.Code;
 import com.iqbon.jcms.service.CodeService;
 import com.iqbon.jcms.util.KeyConstant;
+import com.iqbon.jcms.web.util.JCMSAction;
 
 @Controller
 @Scope("prototype")
 @RequestMapping("/admin/code")
-public class CodeAction {
+public class CodeAction extends JCMSAction {
 
   private final static Logger logger = Logger.getLogger(CodeAction.class);
   @Autowired
@@ -52,9 +53,7 @@ public class CodeAction {
     if (number > 0) {
       return this.getAllCodeGroup();
     }else{
-      ModelAndView mav = new ModelAndView();
-      mav.setViewName(KeyConstant.ERROR_PAGE);
-      return mav;
+      return errorMav;
     }
   }
 
@@ -110,9 +109,7 @@ public class CodeAction {
     if (number > 0) {
       return this.getAllCodeGroup();
     } else {
-      ModelAndView mav = new ModelAndView();
-      mav.setViewName(KeyConstant.ERROR_PAGE);
-      return mav;
+      return errorMav;
     }
   }
 }

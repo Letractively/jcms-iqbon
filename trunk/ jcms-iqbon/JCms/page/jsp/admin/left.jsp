@@ -43,7 +43,7 @@ function showTopicList(){
 				if(json.topicList.length>0){
 					content +="<div id='topicList'>";
 					for(var i = 0; i<json.topicList.length;i++){
-						content += '<p id="tree'+json.topicList[i].topicId+'"><span><a href="javaScript:void(0);"><img src="/images/closedFloder.gif"><img src="/images/folderopen.gif"></a></span>&nbsp;<a href="/admin/topic/topicPage.do?pageNum=1&type=1&topicid='+json.topicList[i].topicId +'&" target="mainFrame">'+json.topicList[i].topicName + '</a></p>';
+						content += '<p id="tree'+json.topicList[i].topicId+'"><span><a href="javaScript:void(0);"><img src="/images/closedFloder.gif"><img src="/images/folderopen.gif"></a></span>&nbsp;<a href="/admin/topic/topicPage.do?pageNum=1&type=0&topicid='+json.topicList[i].topicId +'&" target="mainFrame">'+json.topicList[i].topicName + '</a></p>';
 					}
 					content +="</div>";
 				}

@@ -9,7 +9,7 @@ import org.apache.log4j.Logger;
 
 import com.iqbon.jcms.domain.PushRecord;
 import com.iqbon.jcms.util.BeanFactory;
-import com.iqbon.jcms.web.util.ActionUtil;
+import com.iqbon.jcms.web.util.Page;
 
 public class PushRecordServiceTest extends TestCase {
   
@@ -37,12 +37,18 @@ public class PushRecordServiceTest extends TestCase {
    * 测试根据栏目ID获取推送记录列表，按权重，最终更新时间排序
    */
   public void testGetPushRecordByTopicid() {
-    List<PushRecord> list = pushRecordService.getPushRecordByTopicid(pushRecord.getTopicid(), 0, 1,
-        ActionUtil.DEFAUL_PAGE_SIZE);
+    Page page = new Page(10, 1);
+    List<PushRecord> list = pushRecordService.getPushRecordByTopicid("1206282306000040cl", 0, 1,
+        page.getPageSize());
     logger.info(list.size());
     for(PushRecord pushRecord:list){
       logger.info(ToStringBuilder.reflectionToString(pushRecord));
     }
   }
 
+  public void testAddPushRecord() {
+    //    PushRecord pushRecord = new PushRecord();
+    //
+    //    int number = pushRecordService.addPushRecord(pushRecord);
+  }
 }

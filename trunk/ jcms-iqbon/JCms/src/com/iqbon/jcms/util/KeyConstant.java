@@ -12,6 +12,17 @@ public class KeyConstant {
   public static final String SESSION_KEY_USER = "jcmsUser";
 
   /**
+   * session中保存用户复制文章的KEY
+   */
+  public static final String SESSION_KEY_COPY_INDEX = "copyIndex";
+  
+  /**
+   * session 中保存用户上次复制还是剪切动作的类型
+   *
+   */
+  public static final String SESSION_KEY_COPY_TYPE = "copyType";
+  
+  /**
    * cookie中保存用户名的KEY
    */
   public static final String COOKIE_KEY_USERNAME = "jcms_username";
