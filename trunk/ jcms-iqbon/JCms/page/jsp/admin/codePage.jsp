@@ -100,6 +100,7 @@ function checkAddCode(){
 	var codeValue = $('#codeValue').val();
 	var addCodeGroupName = $('#addCodeGroupName').val();
 	var addCodeParentKey = $('#addCodeParentKey').val();
+	var perContent = $('#addCodeContent').html();
 	$('#addCodeContent').empty();
 	$('#addCodeContent').append(loadingContent);
 	$.post("addSubCode.do",{'codeKey':codeKey,
@@ -107,8 +108,9 @@ function checkAddCode(){
 							'groupName':addCodeParentKey,
 							'parentKey':addCodeParentKey},function(result){
 								if(result.success){
-									$('#addCode').modal('hide');
 									alert('添加成功');
+									$('#addCodeContent').empty();
+									$('#addCodeContent').append(perContent);
 								}else{
 									alert('添加失败');
 								}

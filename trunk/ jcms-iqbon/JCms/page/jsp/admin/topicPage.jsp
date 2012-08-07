@@ -31,6 +31,12 @@
     <button class="btn" onclick="pastePushRecords()" title="粘贴文章或空文章">粘贴</button>
     </div>
 </c:if>
+<c:if test="${type==1 }">
+	<div class="btn-group">
+		<button class="btn" onclick="window.location.href='/admin/model/addModelPage.do?topicid=${topicid}&pageNum=${pageNum }&type=${type }&modelType=0'" title="新建模板">新建</button>
+		<button class="btn"  title="删除模板">删除</button>
+	</div>
+</c:if>
     <div class="btn-group">
     <button class="btn" onclick="showModifyTopic('${topicid}')" title="修改栏目">修改栏目</button>
     <button class="btn" onclick="deleteTopics();" title="删除栏目">删除栏目</button>
@@ -52,6 +58,7 @@
  		<tr>
  			<th><input id="selectItem" type="checkbox" onclick="selectAll();"/></th>
  			<th> 名称 </th>
+ 			<th> 地址 </th>
  			<th>最后修改</th>
  			<th>发布时间</th>
  			<th> 权重</th>
@@ -63,22 +70,39 @@
  		<tr>
  			<td><input type="checkbox" name="topicSelect" value="${topic.topicId }" id="topic_${topicStatus.index }"/></td>
  			<td><a href="/admin/topic/topicPage.do?pageNum=${pageNum }&type=${type }&topicid=${topic.topicId }"><img src="/images/folderopen.gif"/>&nbsp;&nbsp;${topic.topicName}</a></td>
+ 			<td></td>
  			<td>${topic.lastModify}</td>
  			<td></td>
  			<td></td>
  			<td><a href="#">${topic.modifyUser}</a></td>
  		</tr>
  	</c:forEach>
- 	<c:forEach var="pushRecord" items="${pushRecordList}" varStatus="pushRecordStatus">
- 		<tr>
- 			<td><input type="checkbox" name="pushRecordSelect" value="${pushRecord.indexid }" id="topic_${pushRecordStatus.index }"/></td>
- 			<td><a target="blank" href="${pushRecord.url }"><img src="/images/blank_file.gif"/>&nbsp;&nbsp;${pushRecord.title}</a>&nbsp;&nbsp;<a onclick="modifyPushRecord('${pushRecord.indexid}')" href="#" title="修改属性" class="btn-small"><img src="/images/edit.gif"/></a></td>
- 			<td>${pushRecord.lastModify}</td>
- 			<td>${pushRecord.addDate}</td>
- 			<td><a onclick="showChangeLspri('${pushRecord.indexid}')" id="pushRecord_lspri_${pushRecord.indexid }" href="#">${pushRecord.lspri }</a></td>
- 			<td><a href="#">${pushRecord.modifyUser}</a></td>
- 		</tr>
- 	</c:forEach>
+ 	<c:if test="${type==0 }">
+	 	<c:forEach var="pushRecord" items="${pushRecordList}" varStatus="pushRecordStatus">
+	 		<tr>
+	 			<td><input type="checkbox" name="pushRecordSelect" value="${pushRecord.indexid }" id="topic_${pushRecordStatus.index }"/></td>
+	 			<td><a target="blank" href="${pushRecord.url }"><img src="/images/blank_file.gif"/>&nbsp;&nbsp;${pushRecord.title}</a>&nbsp;&nbsp;<a onclick="modifyPushRecord('${pushRecord.indexid}')" href="#" title="修改属性" class="btn-small"><img src="/images/edit.gif"/></a></td>
+	 			<td>${pushRecord.url }</td>
+	 			<td>${pushRecord.lastModify}</td>
+	 			<td>${pushRecord.addDate}</td>
+	 			<td><a onclick="showChangeLspri('${pushRecord.indexid}')" id="pushRecord_lspri_${pushRecord.indexid }" href="#">${pushRecord.lspri }</a></td>
+	 			<td><a href="#">${pushRecord.modifyUser}</a></td>
+	 		</tr>
+	 	</c:forEach>
+ 	</c:if>
+ 	<c:if test="${type==1 }">
+ 		<c:forEach var="model" items="${modelList}" varStatus="modelStatus">
+	 		<tr>
+	 			<td><input type="checkbox" name="modelSelect" value="${model.modelName }" id="model_${modelStatus.index }"/></td>
+	 			<td><a target="blank" href="${model.url }"><img src="/images/model.gif"/>&nbsp;&nbsp;${model.title}</a>&nbsp;&nbsp;<a onclick="modifyPushRecord('${pushRecord.indexid}')" href="#" title="修改属性" class="btn-small"><img src="/images/edit.gif"/></a></td>
+	 			<td>${model.url }</td>
+	 			<td>${model.lastModify}</td>
+	 			<td>${model.addDate}</td>
+	 			<td></td>
+	 			<td><a href="#">${model.modifyUser}</a></td>
+	 		</tr>
+	 	</c:forEach>
+ 	</c:if>
  	</tbody>
  </table>
  </form>
