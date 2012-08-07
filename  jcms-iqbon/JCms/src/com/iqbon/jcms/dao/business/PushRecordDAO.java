@@ -41,7 +41,7 @@ public class PushRecordDAO {
   public List<PushRecord> queryDocPushRecordByTopic(String topicid, int begin,
       int size) {
     String sql = "select indexid,docid,modelname,title,lspri,url,sub_title,add_date,last_modify,modify_user,topicid,type,img "
-        + "from bu_push_record where type !=2 and topicid = :topicid  order by add_date desc,lspri desc,last_modify desc limit :begin,:size";
+        + "from bu_push_record where  topicid = :topicid  order by add_date desc,lspri desc,last_modify desc limit :begin,:size";
     Map<String, Object> map = new HashMap<String, Object>();
     map.put("topicid", topicid);
     map.put("begin", begin);
@@ -50,23 +50,6 @@ public class PushRecordDAO {
     return namedParameterJdbcTemplate.query(sql, paramMap, new PushRecordMapper());
   }
 
-  /**
-   * 根据栏目ID，推送类型，begin,size，分页获取所在栏目的模板推送记录(type为2)
-   * @param topicid
-   * @param begin
-   * @param end
-   * @return
-   */
-  public List<PushRecord> queryModelPushRecordByTopic(String topicid, int begin, int size) {
-    String sql = "select indexid,docid,modelname,title,lspri,url,sub_title,add_date,last_modify,modify_user,topicid,type,img "
-        + "from bu_push_record where type = 2 and topicid = :topicid  order by add_date desc,lspri desc ,last_modify desc limit :begin,:size";
-    Map<String, Object> map = new HashMap<String, Object>();
-    map.put("topicid", topicid);
-    map.put("begin", begin);
-    map.put("size", size);
-    SqlParameterSource paramMap = new MapSqlParameterSource(map);
-    return namedParameterJdbcTemplate.query(sql, paramMap, new PushRecordMapper());
-  }
 
   /**
    * 插入推送记录

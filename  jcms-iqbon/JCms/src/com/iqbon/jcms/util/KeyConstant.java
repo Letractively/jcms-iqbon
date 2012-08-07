@@ -41,5 +41,20 @@ public class KeyConstant {
    * 后台JSP路径
    */
   public static final String ADMIN_JSP_PATH = "/jsp/admin/";
+
+  /**
+   * 模板刷新系统码组名
+   */
+  public static final String CODE_MODEL_REFRESH = "modelRefresh";
+
+  /**
+   * 模板后缀系统码组名
+   */
+  public static final String CODE_MODEL_SUFFIX = "modelSuffix";
+
+  /**
+   * 模板过期日期系统码组名
+   */
+  public static final String CODE_MODEL_TIMEOUT = "modelTimeout";
     
 }

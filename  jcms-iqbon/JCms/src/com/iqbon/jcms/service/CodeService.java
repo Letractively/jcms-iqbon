@@ -75,4 +75,13 @@ public class CodeService {
   public int deleteCodeGroup(String groupName) {
     return codeDAO.deleteCodeByGroup(groupName);
   }
+
+  /**
+   * 根据系统码组名获取系统码组信息
+   * @param groupName
+   * @return
+   */
+  public Code getCodeGroupInfo(String groupName){
+    return codeDAO.queryGroupInfo(groupName);
+  }
 }

@@ -29,14 +29,10 @@ public class PushRecordService {
    * @param pageSize
    * @return
    */
-  public List<PushRecord> getPushRecordByTopicid(String topicid, int type, int pageNum, int pageSize) {
+  public List<PushRecord> getPushRecordByTopicid(String topicid, int pageNum, int pageSize) {
     int begin = (pageNum - 1) * pageSize;
     List<PushRecord> list = new ArrayList<PushRecord>();
-    if (type == 0) {
-      list = pushRecordDAO.queryDocPushRecordByTopic(topicid, begin, pageSize);
-    } else if (type == 1) {
-      list = pushRecordDAO.queryModelPushRecordByTopic(topicid, begin, pageSize);
-    }
+    list = pushRecordDAO.queryDocPushRecordByTopic(topicid, begin, pageSize);
     return list;
   }
 
