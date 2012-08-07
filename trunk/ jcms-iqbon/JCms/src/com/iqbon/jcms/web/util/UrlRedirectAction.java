@@ -36,4 +36,15 @@ public class UrlRedirectAction {
     modelAndView.setViewName(KeyConstant.ADMIN_JSP_PATH + "admin");
     return modelAndView;
   }
+
+  /**
+   * 错误页
+   * @return
+   */
+  @RequestMapping("/error.do")
+  public ModelAndView errorPage() {
+    ModelAndView errorMav = new ModelAndView();
+    errorMav.setViewName(KeyConstant.ERROR_PAGE);
+    return errorMav;
+  }
 }

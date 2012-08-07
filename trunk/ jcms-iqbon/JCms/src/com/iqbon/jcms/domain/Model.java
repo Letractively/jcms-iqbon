@@ -10,12 +10,25 @@ public class Model extends CMSDomain {
   private int type;
   private String url;
   private String title;
-  private String keword;
+  private String keyword;
   private String timeout;
   private int rate;
   private String topicid;
   private String extname;
   private String addTime;
+  private int status;
+
+  public enum modelStatus {
+    unPublish, publish
+  };
+
+  public int getStatus() {
+    return status;
+  }
+
+  public void setStatus(int status) {
+    this.status = status;
+  }
 
   public String getTopicid() {
     return topicid;
@@ -88,11 +101,13 @@ public class Model extends CMSDomain {
   public void setTitle(String title) {
     this.title = title;
   }
-  public String getKeword() {
-    return keword;
+
+  public String getKeyword() {
+    return keyword;
   }
-  public void setKeword(String keword) {
-    this.keword = keword;
+
+  public void setKeyword(String keyword) {
+    this.keyword = keyword;
   }
   public String getTimeout() {
     return timeout;

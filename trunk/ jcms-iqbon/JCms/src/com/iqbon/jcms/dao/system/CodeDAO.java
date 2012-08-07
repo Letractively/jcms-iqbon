@@ -39,7 +39,7 @@ public class CodeDAO {
    */
   @TriggersRemove(cacheName = "codeCache", removeAll = true)
   public int insertCode(Code code) {
-    String sql = "insert into sys_code(group_name,`key`,`value`,parent_key) values (:groupName,:key,:value,:parentKey)";
+    String sql = "insert into sys_code(group_name,`key`,`value`,parent_key,last_modify) values (:groupName,:key,:value,:parentKey,now())";
     SqlParameterSource paramMap = new BeanPropertySqlParameterSource(code);
     return namedParameterJdbcTemplate.update(sql, paramMap);
   }
@@ -79,7 +79,7 @@ public class CodeDAO {
    */
   @Cacheable(cacheName = "codeCache")
   public List<Code> querySubCodeByGroupAndParent(String groupName,String parentKey) {
-    String sql = "select group_name,`key`,`value`,parent_key from sys_code where group_name = :groupName and parent_key = :parentKey and parent_key!=''";
+    String sql = "select group_name,`key`,`value`,parent_key from sys_code where group_name = :groupName and parent_key = :parentKey and parent_key!='' order by last_modify desc";
     Map<String, String> map = new HashMap<String, String>();
     map.put("groupName", groupName);
     map.put("parentKey", parentKey);
@@ -92,9 +92,22 @@ public class CodeDAO {
    */
   @Cacheable(cacheName = "codeCache")
   public List<Code> queryAllGroup() {
-    String sql = "select group_name,`key`,`value`,parent_key , group_name from sys_code where parent_key = ''";
+    String sql = "select group_name,`key`,`value`,parent_key , group_name from sys_code where parent_key = '' order by group_name desc";
     Map<String, String> map = new HashMap<String, String>();
     return namedParameterJdbcTemplate.query(sql, map, new CodeMapper());
+  }
+
+  /**
+   * 根据系统码组名获取系统码组信息
+   * @param groupName
+   * @return
+   */
+  @Cacheable(cacheName = "codeCache")
+  public Code queryGroupInfo(String groupName) {
+    String sql = "select group_name,`key`,`value`,parent_key , group_name from sys_code where parent_key = '' and value =:groupName";
+    Map<String, String> map = new HashMap<String, String>();
+    map.put("groupName", groupName);
+    return namedParameterJdbcTemplate.queryForObject(sql, map, new CodeMapper());
   }
 
 }

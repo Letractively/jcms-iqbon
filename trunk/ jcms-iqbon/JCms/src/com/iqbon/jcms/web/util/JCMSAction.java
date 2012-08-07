@@ -2,8 +2,6 @@ package com.iqbon.jcms.web.util;
 
 import javax.servlet.http.HttpSession;
 
-import org.springframework.web.servlet.ModelAndView;
-
 import com.iqbon.jcms.domain.User;
 import com.iqbon.jcms.util.KeyConstant;
 
@@ -14,10 +12,14 @@ import com.iqbon.jcms.util.KeyConstant;
  */
 public class JCMSAction {
 
-  protected ModelAndView errorMav = new ModelAndView();
+  protected ErrorModelAndView errorMav = new ErrorModelAndView();
 
-  public JCMSAction() {
-    errorMav.setViewName(KeyConstant.ERROR_PAGE);
+  /**
+   * 获取错误页面的url
+   * @return
+   */
+  public String getErrorUrl() {
+    return "redirect:/admin/common/error.do";
   }
 
   /**

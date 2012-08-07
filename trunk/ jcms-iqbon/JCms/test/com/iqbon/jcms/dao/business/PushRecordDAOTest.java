@@ -64,15 +64,6 @@ public class PushRecordDAOTest extends TestCase {
     }
   }
   
-  public void testQueryModelPushRecordByTopic() {
-    Page page = new Page(10, 1);
-    List<PushRecord> list = pushRecordDAO.queryModelPushRecordByTopic(pushRecord.getTopicid(), 0,
-        page.getPageSize());
-    logger.info(list.size());
-    for (PushRecord pushRecord : list) {
-      logger.info(ToStringBuilder.reflectionToString(pushRecord));
-    }
-  }
   
   public void testQueryDocPushRecord() {
     int num = pushRecordDAO.queryPushRecordNumByTopicAndType(pushRecord.getTopicid(), pushRecord

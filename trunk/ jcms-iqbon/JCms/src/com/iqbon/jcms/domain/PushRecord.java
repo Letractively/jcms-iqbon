@@ -7,6 +7,13 @@ public class PushRecord extends CMSDomain {
    */
   private static final long serialVersionUID = 1L;
 
+  /**
+   * 推送记录类型
+   */
+  public static enum PUSH_RECORD_TYPE {
+    emptyDoc, doc, model
+  };
+
   private int indexid;
    
    private int docid;

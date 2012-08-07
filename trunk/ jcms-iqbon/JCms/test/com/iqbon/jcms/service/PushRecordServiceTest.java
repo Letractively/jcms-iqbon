@@ -38,7 +38,7 @@ public class PushRecordServiceTest extends TestCase {
    */
   public void testGetPushRecordByTopicid() {
     Page page = new Page(10, 1);
-    List<PushRecord> list = pushRecordService.getPushRecordByTopicid("1206282306000040cl", 0, 1,
+    List<PushRecord> list = pushRecordService.getPushRecordByTopicid("1206282306000040cl", 1,
         page.getPageSize());
     logger.info(list.size());
     for(PushRecord pushRecord:list){

@@ -21,7 +21,7 @@ public class CodeDAOTest extends TestCase {
     code = new Code();
     code.setGroupName("test");
     code.setKey("key");
-    code.setParentKey("test");
+    code.setParentKey(null);
     code.setValue("value");
     codeDAO = (CodeDAO) BeanFactory.getBean("codeDAO");
   }
@@ -59,4 +59,8 @@ public class CodeDAOTest extends TestCase {
     }
   }
 
+  public void testQueryGroupInfo() {
+    Code codeGroup = codeDAO.queryGroupInfo(code.getGroupName());
+    logger.info(ToStringBuilder.reflectionToString(codeGroup));
+  }
 }

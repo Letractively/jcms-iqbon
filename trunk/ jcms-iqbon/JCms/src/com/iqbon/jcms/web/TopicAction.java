@@ -18,12 +18,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.iqbon.jcms.domain.Model;
 import com.iqbon.jcms.domain.PushRecord;
 import com.iqbon.jcms.domain.Topic;
 import com.iqbon.jcms.domain.User;
+import com.iqbon.jcms.service.ModelService;
 import com.iqbon.jcms.service.PushRecordService;
 import com.iqbon.jcms.service.TopicService;
-import com.iqbon.jcms.util.JCMSConstant;
 import com.iqbon.jcms.util.KeyConstant;
 import com.iqbon.jcms.web.util.JCMSAction;
 import com.iqbon.jcms.web.util.Page;
@@ -35,10 +36,30 @@ public class TopicAction extends JCMSAction {
   
   private final Logger logger = Logger.getLogger(TopicAction.class);
   
+  /**
+   * 栏目列表页查看模式
+   * @author hp
+   *
+   */
+  private enum ViewMode {
+    doc, model
+  };
+  
+  /**
+   * 用户复制动作的类型
+   *
+   */
+  private enum CopyType {
+    copy, cut
+  };
+
   @Autowired
   private TopicService topicService;
   @Autowired
   private PushRecordService pushRecordService;
+
+  @Autowired
+  private ModelService modelService;
 
   /**
      * 顶级栏目JSON数据
@@ -70,10 +91,15 @@ public class TopicAction extends JCMSAction {
     int totalNum = pushRecordService.getPushRecordNumByTopicAndType(topicid, type);
     Page page = new Page(totalNum, pageNum);
     int totalPageNum = page.getTotalPage();
-    List<PushRecord> pushRecordList = pushRecordService.getPushRecordByTopicid(topicid, type,
+    if (type == ViewMode.doc.ordinal()) {
+      List<PushRecord> pushRecordList = pushRecordService.getPushRecordByTopicid(topicid,
         pageNum, page.getPageSize());
+      mav.addObject("pushRecordList", pushRecordList);
+    } else if (type == ViewMode.model.ordinal()) {
+      List<Model> modelList = modelService.getModelByTopic(topicid);
+      mav.addObject("modelList", modelList);
+    }
     mav.addObject("subTopicList", subTopicList);
-    mav.addObject("pushRecordList", pushRecordList);
     mav.addObject("totalPageNum", totalPageNum);
     mav.addObject("pageNum", pageNum);
     mav.addObject("nextPageNum", page.getNextPage());
@@ -349,7 +375,7 @@ public class TopicAction extends JCMSAction {
   int pageNum, @RequestParam(value = "type", required = false)
   int type, HttpSession session) {
     session.setAttribute(KeyConstant.SESSION_KEY_COPY_INDEX, indexid);
-    session.setAttribute(KeyConstant.SESSION_KEY_COPY_TYPE, JCMSConstant.CopyType.copy);
+    session.setAttribute(KeyConstant.SESSION_KEY_COPY_TYPE, CopyType.copy);
     return this.topicPage(topicid, pageNum, type);
   }
   
@@ -366,7 +392,7 @@ public class TopicAction extends JCMSAction {
   int pageNum, @RequestParam(value = "type", required = false)
   int type, HttpSession session) {
     session.setAttribute(KeyConstant.SESSION_KEY_COPY_INDEX, indexid);
-    session.setAttribute(KeyConstant.SESSION_KEY_COPY_TYPE, JCMSConstant.CopyType.cut);
+    session.setAttribute(KeyConstant.SESSION_KEY_COPY_TYPE, CopyType.cut);
     return this.topicPage(topicid, pageNum, type);
   }
 
@@ -384,9 +410,9 @@ public class TopicAction extends JCMSAction {
   int pageNum, @RequestParam(value = "type", required = false)
   int type, HttpSession session) {
     int number =0;
-    JCMSConstant.CopyType copyType= (JCMSConstant.CopyType)session.getAttribute(KeyConstant.SESSION_KEY_COPY_TYPE);
+    CopyType copyType = (CopyType) session.getAttribute(KeyConstant.SESSION_KEY_COPY_TYPE);
     String[] indexid = (String[])session.getAttribute(KeyConstant.SESSION_KEY_COPY_INDEX);
-    if(copyType.equals(JCMSConstant.CopyType.copy)){
+    if (copyType.equals(CopyType.copy)) {
        number  =pushRecordService.copyPushRecords(Arrays.asList(indexid), topicid);
     }else{
       number = pushRecordService.cutPushRecords(Arrays.asList(indexid), topicid);
