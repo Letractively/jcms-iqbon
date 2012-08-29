@@ -19,8 +19,9 @@
           </span> 
           </li>
           <li><a href="javaScript:showSysMenu();"><i class="icon-pencil"></i>系统设置</a>
-          	<div id="sysMenu" style="background-color: #D5D5D5;padding-left:10px;display: none;">
-				<span><a href="/admin/code/codePage.do" target="mainFrame">参数管理</a></span>		
+          	<div id="sysMenu" style="padding-left:10px;display: none;">
+				<div><a href="/admin/code/codePage.do" target="mainFrame">参数管理</a></div>
+				<div><a href="/admin/model/showDocModelList.do" target="mainFrame">文章模板</a></div>		
 			</div>
           </li>
         </ul>
