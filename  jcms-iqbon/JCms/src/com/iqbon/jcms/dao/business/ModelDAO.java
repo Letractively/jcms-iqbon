@@ -59,12 +59,13 @@ public class ModelDAO {
    * @param topicid
    * @return
    */
-  public List<Model> queryModelByTopic(String topicid) {
+  public List<Model> queryModelByTopic(String topicid, int type) {
 
-    String sql = "select bu_model.*,bu_model_refresh.* from bu_model,bu_model_refresh where topicid = :topicid "
-        + " and bu_model.model_name = bu_model_refresh.model_name order by add_time desc,last_modify desc,title desc";
+    String sql = "select bu_model.*,bu_model_refresh.* from bu_model,bu_model_refresh where topicid = :topicid and type=:type"
+        + " and bu_model.model_name = bu_model_refresh.model_name and del = '0' order by add_time desc,last_modify desc,title desc";
     Map<String, Object> map = new HashMap<String, Object>();
     map.put("topicid", topicid);
+    map.put("type", type);
     return namedParameterJdbcTemplate.query(sql, map, new ModelMapper());
   }
 
@@ -74,7 +75,7 @@ public class ModelDAO {
    * @return
    */
   public int queryModelNumberByTopic(String topicid) {
-    String sql  = "select count(model_name) from bu_model where topicid=:topicid";
+    String sql = "select count(model_name) from bu_model where topicid=:topicid and del = '0'";
     Map<String, Object> map = new HashMap<String, Object>();
     map.put("topicid", topicid);
     return namedParameterJdbcTemplate.queryForInt(sql, map);
@@ -100,7 +101,7 @@ public class ModelDAO {
    */
   public int updateModel(Model model) {
     String sql = "update bu_model set content=:content,last_modify=:lastModify,modify_user=:modifyUser,title=:title,keyword=:keyword,extname=:extname"
-        + " where model_name=:modelName";
+        + ",status=:status where model_name=:modelName";
     SqlParameterSource paramMap = new BeanPropertySqlParameterSource(model);
     return namedParameterJdbcTemplate.update(sql, paramMap);
   }
@@ -111,9 +112,10 @@ public class ModelDAO {
    * @return
    */
   public int deleteModel(String modelName) {
-    String sql = "update bu_model set delete = 1 where model_name = :modelName";
+    String sql = "update bu_model set del = 1 where model_name = :modelName";
     Map<String, Object> map = new HashMap<String, Object>();
     map.put("modelName", modelName);
     return namedParameterJdbcTemplate.update(sql, map);
   }
+
 }

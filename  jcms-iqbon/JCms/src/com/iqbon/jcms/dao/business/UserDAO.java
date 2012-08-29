@@ -119,4 +119,19 @@ public class UserDAO{
     SqlParameterSource paramMap = new MapSqlParameterSource(map);
     return namedParameterJdbcTemplate.update(sql, paramMap);
   }
+
+  /**
+   * 根据用户名获取用户信息
+   * @param userName
+   * @return
+   */
+  public User queryUserInfoByUserName(String userName) {
+    String sql = "select user_name , position_num ,email , telephone , nickname, mobile from bu_user"
+        + " where user_name=:userName";
+    Map<String, String> map = new HashMap<String, String>(1);
+    map.put("userName", userName);
+    SqlParameterSource paramMap = new MapSqlParameterSource(map);
+    return namedParameterJdbcTemplate.queryForObject(sql, paramMap, new UserMapper());
+
+  }
 }

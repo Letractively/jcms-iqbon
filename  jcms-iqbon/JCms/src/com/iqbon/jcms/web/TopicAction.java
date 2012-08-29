@@ -42,7 +42,14 @@ public class TopicAction extends JCMSAction {
    *
    */
   private enum ViewMode {
-    doc, model
+    /**
+     * 文章查看模式
+     */
+    doc,
+    /**
+     * 模板查看模式 
+     */
+    model
   };
   
   /**
@@ -96,7 +103,8 @@ public class TopicAction extends JCMSAction {
         pageNum, page.getPageSize());
       mav.addObject("pushRecordList", pushRecordList);
     } else if (type == ViewMode.model.ordinal()) {
-      List<Model> modelList = modelService.getModelByTopic(topicid);
+      List<Model> modelList = modelService.getModelByTopic(topicid,
+          Model.modelType.normal.ordinal());
       mav.addObject("modelList", modelList);
     }
     mav.addObject("subTopicList", subTopicList);

@@ -1,7 +1,11 @@
 package com.iqbon.jcms.service;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,23 +14,31 @@ import com.iqbon.jcms.dao.business.ModelDAO;
 import com.iqbon.jcms.dao.system.ModelLogDAO;
 import com.iqbon.jcms.domain.Model;
 import com.iqbon.jcms.domain.ModelLog;
+import com.iqbon.jcms.util.JCMSConstant;
+import com.iqbon.jcms.util.JCMSProperties;
 
 @Service
 public class ModelService {
 
   private static final Logger logger = Logger.getLogger(ModelService.class);
+
+  private final JCMSProperties jcmsProperties = JCMSProperties.getInstance();
+
   @Autowired
   private ModelDAO modelDAO;
   @Autowired
   private ModelLogDAO modelLogDAO;
+
+  @Autowired
+  private VelocityService velocityService;
 
   /**
    * 根据栏目获取模板列表
    * @param topicid
    * @return
    */
-  public List<Model> getModelByTopic(String topicid) {
-    return modelDAO.queryModelByTopic(topicid);
+  public List<Model> getModelByTopic(String topicid, int type) {
+    return modelDAO.queryModelByTopic(topicid, type);
   }
 
   /**
@@ -120,5 +132,23 @@ public class ModelService {
       logger.error("插入模板日志失败");
     }
     return modelDAO.deleteModel(modelName);
+  }
+
+  /**
+   * 发布模板内容
+   * @param model
+   * @throws IOException 
+   */
+  public void publishModelContent(Model model) throws IOException {
+    logger.info("发布模板" + ToStringBuilder.reflectionToString(model));
+    String output = velocityService.parse(model.getContent());
+    logger.info("输出内容" + output);
+    File file = JCMSConstant.createModelOutputFile(model.getUrl());
+    if (file == null) {
+      throw new IOException("获取模板uri出错");
+    }
+    logger.info(ToStringBuilder.reflectionToString(file));
+    String encoding = jcmsProperties.getOutFileCoding();
+    FileUtils.write(file, output, encoding);
   }
 }
