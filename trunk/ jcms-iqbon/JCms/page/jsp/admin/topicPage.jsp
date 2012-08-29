@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -33,7 +33,7 @@
 </c:if>
 <c:if test="${type==1 }">
 	<div class="btn-group">
-		<button class="btn" onclick="window.location.href='/admin/model/addModelPage.do?topicid=${topicid}&pageNum=${pageNum }&type=${type }&modelType=0'" title="新建模板">新建</button>
+		<button class="btn" onclick="window.location.href='/admin/model/addModifyModelPage.do?topicid=${topicid}&pageNum=${pageNum }&type=${type }&modelType=0'" title="新建模板">新建</button>
 		<button class="btn"  title="删除模板">删除</button>
 	</div>
 </c:if>
@@ -94,10 +94,10 @@
  		<c:forEach var="model" items="${modelList}" varStatus="modelStatus">
 	 		<tr>
 	 			<td><input type="checkbox" name="modelSelect" value="${model.modelName }" id="model_${modelStatus.index }"/></td>
-	 			<td><a target="blank" href="${model.url }"><img src="/images/model.gif"/>&nbsp;&nbsp;${model.title}</a>&nbsp;&nbsp;<a onclick="modifyPushRecord('${pushRecord.indexid}')" href="#" title="修改属性" class="btn-small"><img src="/images/edit.gif"/></a></td>
+	 			<td><a href="/admin/model/addModifyModelPage.do?modelName=${model.modelName }&topicid=${topicid}&pageNum=${pageNum }&type=${type }&modelType=0"><img src="/images/model.gif"/>&nbsp;&nbsp;${model.title}</a>&nbsp;&nbsp;<a onclick="modifyPushRecord('${pushRecord.indexid}')" href="#" title="修改属性" class="btn-small"><img src="/images/edit.gif"/></a></td>
 	 			<td>${model.url }</td>
 	 			<td>${model.lastModify}</td>
-	 			<td>${model.addDate}</td>
+	 			<td>${model.addTime}</td>
 	 			<td></td>
 	 			<td><a href="#">${model.modifyUser}</a></td>
 	 		</tr>
@@ -369,6 +369,5 @@
 				$('#dolot').attr('action','/admin/topic/pastePushRecord.do');
 				$('#dolot').submit();
 	}
-	
 </script>
 </html>
