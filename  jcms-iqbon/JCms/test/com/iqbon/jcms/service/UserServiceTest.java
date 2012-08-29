@@ -23,7 +23,7 @@ public class UserServiceTest extends TestCase {
   }
 
   public void testUserValidation() {
-    User user = userService.UserValidation("testuser", "test");
+    User user = userService.userValidation("testuser", "test");
     logger.info(ToStringBuilder.reflectionToString(user));
   }
 
