@@ -51,7 +51,8 @@ public class ModelDAOTest extends TestCase {
   }
 
   public void testQueryModelByTopic() {
-    List<Model> list = modelDAO.queryModelByTopic(model.getTopicid());
+    List<Model> list = modelDAO.queryModelByTopic(model.getTopicid(),
+        Model.modelType.normal.ordinal());
     for (Model model : list) {
       logger.info(ToStringBuilder.reflectionToString(model));
     }
