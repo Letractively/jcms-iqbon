@@ -19,8 +19,26 @@ public class Model extends CMSDomain {
   private int status;
 
   public enum modelStatus {
-    unPublish, publish
+    /**
+     * 未发布
+     */
+    unPublish,
+    /**
+     * 发布
+     */
+    publish
   };
+
+  public enum modelType {
+    /**
+     * 普通模板
+     */
+    normal,
+    /**
+     *文章模板 
+     */
+    doc
+  }
 
   public int getStatus() {
     return status;

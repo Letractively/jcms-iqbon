@@ -22,7 +22,7 @@ public class UserService {
    * @param password
    * @return
    */
-  public User UserValidation(String userName, String password) {
+  public User userValidation(String userName, String password) {
     User user = userDAO.validationUser(userName, password);
     if (user != null) {
       String lastLogin = DateFormatUtils.ISO_DATETIME_FORMAT.format(new Date());
@@ -31,5 +31,21 @@ public class UserService {
     return user;
   }
 
+  /**
+   * 更新用户信息
+   * @param user
+   * @return
+   */
+  public int modifyUserInfo(User user) {
+    return userDAO.updateUserInfo(user);
+  }
   
+  /**
+   * 根据用户名获取用户信息
+   * @param userName
+   * @return
+   */
+  public User getUserInfoByUserName(String userName) {
+    return userDAO.queryUserInfoByUserName(userName);
+  }
 }

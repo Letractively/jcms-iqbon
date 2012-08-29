@@ -17,7 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.iqbon.jcms.domain.User;
 import com.iqbon.jcms.service.UserService;
-import com.iqbon.jcms.util.JCMSConstant;
+import com.iqbon.jcms.util.JCMSProperties;
 import com.iqbon.jcms.util.KeyConstant;
 
 @Controller
@@ -42,22 +42,23 @@ public class UserAction {
       HttpServletRequest request,
       HttpServletResponse response) {
     ModelAndView view = new ModelAndView();
-    User user = userService.UserValidation(userName, password);
+    User user = userService.userValidation(userName, password);
     if (user == null) {//用户不存在
         view.setViewName(KeyConstant.ERROR_PAGE);
       } else {
+      JCMSProperties propertiy = JCMSProperties.getInstance();
         HttpSession session = request.getSession();
         if (authCode.equals(session.getAttribute(KeyConstant.SESSION_KEY_AUTH_CODE))) {
         if (BooleanUtils.isTrue(remember)) {//保存记住用户名的cookie
             Cookie cookie = new Cookie(KeyConstant.COOKIE_KEY_USERNAME, userName);
             cookie.setMaxAge(3600 * 24 * 7);
-            cookie.setPath(JCMSConstant.getHost());
+          cookie.setPath(propertiy.getHost());
             response.addCookie(cookie);
           }
           session.removeAttribute(KeyConstant.SESSION_KEY_AUTH_CODE); 
           session.setAttribute(KeyConstant.SESSION_KEY_USER, user);
           view.setViewName("redirect:/admin/common/index.do");
-          logger.info("user:" + user.getUserName() + "login");
+        logger.info("user:" + user.getUserName() + " login");
       } else {//验证码错误
           view.setViewName(KeyConstant.ERROR_PAGE);
         }
@@ -74,6 +75,21 @@ public class UserAction {
     ModelAndView view = new ModelAndView();
     view.setViewName(KeyConstant.ADMIN_JSP_PATH + "top");
     view.addObject("user", session.getAttribute(KeyConstant.SESSION_KEY_USER));
+    return view;
+  }
+
+  /**
+   * 根据用户名获取用户信息
+   * @param userName
+   * @return
+   */
+  @RequestMapping(value = "/userInfo.do")
+  public ModelAndView getUserInfoByUserName(@RequestParam("userName")
+  String userName) {
+    ModelAndView view = new ModelAndView();
+    User user = userService.getUserInfoByUserName(userName);
+    view.addObject("user", user);
+    view.setViewName(KeyConstant.ADMIN_JSP_PATH + "user");
     return view;
   }
 }

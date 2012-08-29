@@ -1,5 +1,6 @@
 package com.iqbon.jcms.web;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -50,7 +51,7 @@ public class ModelAction extends JCMSAction {
    */
   @RequestMapping(value = "/addModifyModelPage.do")
   public ModelAndView showAddModel(@RequestParam(value = "modelName", required = false)
-  String modelName, @RequestParam("topicid")
+  String modelName, @RequestParam(value = "topicid", required = false)
   String topicid, @RequestParam("pageNum")
   int pageNum, @RequestParam("type")
   int type, @RequestParam(value = "modelType", required = false)
@@ -94,6 +95,19 @@ public class ModelAction extends JCMSAction {
   }
 
   /**
+   * 显示文章模板列表
+   * @return
+   */
+  @RequestMapping(value = "/showDocModelList.do")
+  public ModelAndView showDocModel() {
+    ModelAndView mav = new ModelAndView();
+    List<Model> modelList = modelService.getModelByTopic("", Model.modelType.doc.ordinal());
+    mav.addObject("modelList", modelList);
+    mav.setViewName(KeyConstant.ADMIN_JSP_PATH + "docsModelPage");
+    return mav;
+  }
+
+  /**
    * 增加模板
    * @return
    */
@@ -107,7 +121,7 @@ public class ModelAction extends JCMSAction {
   int status, @RequestParam("refresh")
   int refresh, @RequestParam("timeout")
   int timeout, @RequestParam("modelType")
-  int modelType, @RequestParam("topicid")
+  int modelType, @RequestParam(value = "topicid", required = false)
   String topicid, @RequestParam("pageNum")
   int pageNum, @RequestParam("type")
   int type, HttpSession session) {
@@ -143,7 +157,13 @@ public class ModelAction extends JCMSAction {
       logger.error("插入空文章失败");
       return getErrorUrl();
     }
-    if(status==Model.modelStatus.publish.ordinal()){
+    if (status == Model.modelStatus.publish.ordinal()) {//发布模板
+      try {
+        modelService.publishModelContent(model);
+      } catch (IOException e) {
+        logger.error("输出模板页面出错，modelName=" + model.getModelName(), e);
+        return getErrorUrl();
+      }
       return "redirect:/admin/topic/topicPage.do?topicid=" + topicid + "&pageNum=" + pageNum
           + "&type=" + type;
 
@@ -163,11 +183,12 @@ public class ModelAction extends JCMSAction {
   String title, @RequestParam("suffix")
   String suffix, @RequestParam("keyword")
   String keyword, @RequestParam("content")
-  String content, @RequestParam("status")
+  String content, @RequestParam("url")
+  String url, @RequestParam("status")
   int status, @RequestParam("refresh")
   int refresh, @RequestParam("timeout")
   int timeout, @RequestParam("modelType")
-  int modelType, @RequestParam("topicid")
+  int modelType, @RequestParam(value = "topicid", required = false)
   String topicid, @RequestParam("pageNum")
   int pageNum, @RequestParam("type")
   int type, HttpSession session) {
@@ -185,6 +206,7 @@ public class ModelAction extends JCMSAction {
     model.setTopicid(topicid);
     model.setRate(refresh);
     model.setType(modelType);
+    model.setUrl(url);
     Date now = new Date();
     Date timeoutDate = DateUtils.addDays(now, timeout);
     model.setTimeout(DateFormatUtils.ISO_DATETIME_FORMAT.format(timeoutDate));
@@ -196,6 +218,12 @@ public class ModelAction extends JCMSAction {
       return getErrorUrl();
     }
     if (status == Model.modelStatus.publish.ordinal()) {
+      try {
+        modelService.publishModelContent(model);
+      } catch (IOException e) {
+        logger.error("输出模板页面出错，modelName=" + model.getModelName(), e);
+        return getErrorUrl();
+      }
       return "redirect:/admin/topic/topicPage.do?topicid=" + topicid + "&pageNum=" + pageNum
           + "&type=" + type;
 
@@ -214,8 +242,9 @@ public class ModelAction extends JCMSAction {
    * @param session
    * @return
    */
+  @RequestMapping(value = "/deleteModel.do")
   public String deleteModel(@RequestParam("modelName")
-  String modelName, @RequestParam("topicid")
+  String modelName, @RequestParam(value = "topicid", required = false)
   String topicid, @RequestParam("pageNum")
   int pageNum, @RequestParam("type")
   int type, HttpSession session) {
