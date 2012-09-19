@@ -13,6 +13,7 @@ import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.iqbon.jcms.domain.Doc;
 import com.iqbon.jcms.util.JCMSVelocityContext;
 
 @Service
@@ -55,6 +56,37 @@ public class VelocityService {
     }
     StringWriter writer = new StringWriter();
     JCMSVelocityContext context = JCMSVelocityContext.getInstance();
+    try {
+      Velocity.evaluate(context, writer, "VMMessage", content);
+      writer.flush();
+      String result = writer.toString();
+      writer.close();
+      return result;
+    } catch (MethodInvocationException e) {
+      logger.error("解析模板出错：" + e.getMessage());
+      throw new RuntimeException(e);
+    } catch (IOException e) {
+      logger.error("解析模板出错：" + e.getMessage());
+      throw new RuntimeException(e);
+    }
+  }
+
+  /**
+   * 解析文章模板
+   * @param content
+   * @param doc
+   * @return
+   * @throws ResourceNotFoundException
+   * @throws ParseErrorException
+   */
+  public String parseDoc(String content, Doc doc) throws ResourceNotFoundException,
+      ParseErrorException {
+    if (StringUtils.isEmpty(content)) {
+      throw new ParseErrorException("输入内容为空");
+    }
+    StringWriter writer = new StringWriter();
+    JCMSVelocityContext context = JCMSVelocityContext.getInstance();
+    context.put("doc", doc);
     try {
       Velocity.evaluate(context, writer, "VMMessage", content);
       writer.flush();

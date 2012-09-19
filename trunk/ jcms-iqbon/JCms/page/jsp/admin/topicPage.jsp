@@ -22,7 +22,7 @@
     <span class="caret"></span>
     </a>
     <ul class="dropdown-menu">
-    	<li><a href="#">发布文章</a></li>
+    	<li><a href="/admin/doc/showAddModifyDoc.do?topicid=${topicid}&pageNum=${pageNum }&type=${type }">发布文章</a></li>
     	<li><a href="#" onclick="$('#addBlankDoc').modal('show');">发布空文章</a></li>
     </ul>
     <button class="btn" onclick="deletePushRecords();" title="删除推送记录">删除</button>
@@ -81,7 +81,26 @@
 	 	<c:forEach var="pushRecord" items="${pushRecordList}" varStatus="pushRecordStatus">
 	 		<tr>
 	 			<td><input type="checkbox" name="pushRecordSelect" value="${pushRecord.indexid }" id="topic_${pushRecordStatus.index }"/></td>
-	 			<td><a target="blank" href="${pushRecord.url }"><img src="/images/blank_file.gif"/>&nbsp;&nbsp;${pushRecord.title}</a>&nbsp;&nbsp;<a onclick="modifyPushRecord('${pushRecord.indexid}')" href="#" title="修改属性" class="btn-small"><img src="/images/edit.gif"/></a></td>
+	 			<td>
+	 			<c:if test="${pushRecord.type!=1 }">
+	 				<a target="blank" href="${pushRecord.url }">
+	 					<img src="/images/blank_file.gif"/>&nbsp;&nbsp;${pushRecord.title}
+	 				</a>&nbsp;&nbsp;<a onclick="modifyPushRecord('${pushRecord.indexid}')" href="#" title="修改属性" class="btn-small">
+	 					<img src="/images/edit.gif"/>
+	 				</a>
+	 			</c:if>
+	 			<c:if test="${pushRecord.type==1 }">
+	 				<a target="blank" href="${pushRecord.url }" >
+	 					<img src="/images/file.gif"/>&nbsp;&nbsp;
+	 				</a>
+	 				<a href="/admin/doc/showAddModifyDoc.do?topicid=${topicid }&pageNum=${pageNum}&type=${type}&docid=${pushRecord.docid}">
+	 					${pushRecord.title}
+	 				</a>
+	 				</a>&nbsp;&nbsp;<a onclick="modifyPushRecord('${pushRecord.indexid}')" href="#" title="修改属性" class="btn-small">
+	 					<img src="/images/edit.gif"/>
+	 				</a>
+	 			</c:if>	
+	 			</td>
 	 			<td>${pushRecord.url }</td>
 	 			<td>${pushRecord.lastModify}</td>
 	 			<td>${pushRecord.addDate}</td>

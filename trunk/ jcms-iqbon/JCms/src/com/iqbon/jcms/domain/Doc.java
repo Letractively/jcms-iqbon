@@ -7,7 +7,42 @@ public class Doc extends CMSDomain {
    */
   private static final long serialVersionUID = 1L;
 
-  private int docid;
+  /**
+   * 文章类型
+   *
+   */
+  public static enum docType {
+    /**
+     * 普通文章
+     */
+    normal,
+    /**
+     * 图片文章
+     */
+    picture,
+    /**
+     * 视频文章
+     */
+    video
+  };
+
+  /**
+   * 文章状态
+   * @author hp
+   *
+   */
+  public enum docStatus {
+    /**
+     * 未发布
+     */
+    unPublish,
+    /**
+     * 发布
+     */
+    publish
+  }
+
+  private String docid;
 
   private String title;
   
@@ -29,11 +64,31 @@ public class Doc extends CMSDomain {
   
   private String keyword;
 
-  public int getDocid() {
+  private String modelName;
+
+  private int status;
+
+  public int getStatus() {
+    return status;
+  }
+
+  public void setStatus(int status) {
+    this.status = status;
+  }
+
+  public String getModelName() {
+    return modelName;
+  }
+
+  public void setModelName(String modelName) {
+    this.modelName = modelName;
+  }
+
+  public String getDocid() {
     return docid;
   }
 
-  public void setDocid(int docid) {
+  public void setDocid(String docid) {
     this.docid = docid;
   }
 

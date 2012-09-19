@@ -28,6 +28,9 @@ public class DocDAOTest extends TestCase {
     doc.setTitle("title");
     doc.setType(0);
     doc.setUrl("http://blog.iqbon.com");
+    doc.setModelName("testModel");
+    doc.setStatus(Doc.docStatus.unPublish.ordinal());
+    doc.setDocid("11111111111");
   }
 
   protected void tearDown() throws Exception {
@@ -40,15 +43,19 @@ public class DocDAOTest extends TestCase {
   }
 
   public void testQueryDocById() {
-    Doc one = docDAO.queryDocById(1);
+    Doc one = docDAO.queryDocById("11111111111");
     logger.info(ToStringBuilder.reflectionToString(one));
   }
 
   public void testUpdateDoc() {
-    doc.setDocid(1);
+    doc.setDocid("11111111111");
     doc.setDelete(1);
     int number = docDAO.updateDoc(doc);
     logger.info(number);
+  }
+
+  public void testDeleteDoc() {
+    logger.info(docDAO.deleteDoc(doc.getDocid()));
   }
 
 }

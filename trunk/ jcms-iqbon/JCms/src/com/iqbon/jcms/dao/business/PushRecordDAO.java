@@ -42,7 +42,7 @@ public class PushRecordDAO {
       int size) {
     String sql = "select indexid,docid,modelname,title,lspri,url,sub_title,add_date,last_modify,modify_user,topicid,type,img "
         + "from bu_push_record where  topicid = :topicid  order by add_date desc,lspri desc,last_modify desc limit :begin,:size";
-    Map<String, Object> map = new HashMap<String, Object>();
+    Map<String, Object> map = new HashMap<String, Object>(3);
     map.put("topicid", topicid);
     map.put("begin", begin);
     map.put("size", size);
@@ -70,7 +70,7 @@ public class PushRecordDAO {
    */
   public int deletePushRecord(int indexid) {
     String sql = "delete from bu_push_record where indexid = :indexid";
-    Map<String, Integer> map = new HashMap<String, Integer>();
+    Map<String, Integer> map = new HashMap<String, Integer>(1);
     map.put("indexid", indexid);
     return namedParameterJdbcTemplate.update(sql, map);
   }
@@ -82,7 +82,7 @@ public class PushRecordDAO {
    */
   public int queryPushRecordNumByTopicAndType(String topicid, int type) {
     String sql = "select count(indexid) from bu_push_record where type = :type and topicid = :topicid";
-    Map<String, Object> map = new HashMap<String, Object>();
+    Map<String, Object> map = new HashMap<String, Object>(2);
     map.put("topicid", topicid);
     map.put("type", type);
     return namedParameterJdbcTemplate.queryForInt(sql, map);
@@ -95,7 +95,7 @@ public class PushRecordDAO {
    */
   public int queryPushRecordNumByTopic(String topicid) {
     String sql = "select count(indexid) from bu_push_record where topicid = :topicid";
-    Map<String, String> map = new HashMap<String, String>();
+    Map<String, String> map = new HashMap<String, String>(1);
     map.put("topicid", topicid);
     return namedParameterJdbcTemplate.queryForInt(sql, map);
   }
@@ -121,7 +121,7 @@ public class PushRecordDAO {
    */
   public PushRecord queryPushRecordById(int indexid) {
     String sql = "select * from bu_push_record where indexid=:indexid";
-    Map<String, Integer> map = new HashMap<String, Integer>();
+    Map<String, Integer> map = new HashMap<String, Integer>(1);
     map.put("indexid", indexid);
     return namedParameterJdbcTemplate.queryForObject(sql, map, new PushRecordMapper());
   }
@@ -150,7 +150,7 @@ public class PushRecordDAO {
    */
   public List<PushRecord> queryPushRecordsById(List<String> indexidList) {
     String sql = "select * from bu_push_record where indexid in "+indexidList.toString().replace("[", "(").replace("]", ")");
-    Map<String, String> map = new HashMap<String, String>();
+    Map<String, String> map = new HashMap<String, String>(0);
     return namedParameterJdbcTemplate.query(sql, map, new PushRecordMapper());
   }
 
@@ -167,5 +167,17 @@ public class PushRecordDAO {
       paramMap[i] = new BeanPropertySqlParameterSource(list.get(i));
     }
     return namedParameterJdbcTemplate.batchUpdate(sql, paramMap).length;
+  }
+
+  /**
+   * 删除指定文章的所有推送记录
+   * @param docid
+   * @return
+   */
+  public int deletePushRecordByDocid(String docid) {
+    String sql = "delete from bu_push_record where docid = :docid";
+    Map<String, String> map = new HashMap<String, String>(1);
+    map.put("docid", docid);
+    return namedParameterJdbcTemplate.update(sql, map);
   }
 }

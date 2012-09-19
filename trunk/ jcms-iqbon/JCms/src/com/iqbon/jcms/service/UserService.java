@@ -48,4 +48,24 @@ public class UserService {
   public User getUserInfoByUserName(String userName) {
     return userDAO.queryUserInfoByUserName(userName);
   }
+
+  /**
+   * 修改用户密码，修改成功则返回用户信息，失败返回null
+   * @param userName
+   * @param password
+   * @return
+   */
+  public User updatePasswordByUserName(String userName, String password, String oldPassword) {
+    User user = userDAO.validationUser(userName, oldPassword);
+    if (null != user) {
+      int number = userDAO.updatePassword(userName, password);
+      if (number > 0) {
+        return user;
+      } else {
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
 }

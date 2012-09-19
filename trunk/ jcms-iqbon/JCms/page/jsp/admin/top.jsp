@@ -20,13 +20,8 @@
 	    <li class="active">
 	    <a href="#">首页</a>
 	    </li>
-	    <li id="userInfo" class="dropdown">
-	    <a class="dropdown-toggle" href="#userInfo" data-toggle="dropdown">我的信息</a>
-		    <ul class="dropdown-menu">
-		    	<li><a href="/admin/user/userInfo.do?userName=${user.userName }">修改信息</a></li>
-	    		<li><a href="#" onclick="$('#addBlankDoc').modal('show');">更新密码</a></li>
-	    		<li><a href="#">我的栏目</a></li>
-	    	</ul>
+	    <li>
+	    <a href="/admin/common/leftUserSetting.do?userName=${user.userName }" target="left">我的信息</a>
 	   	</li>
 	    <li><a href="#">系统设置</a></li>
     	</ul>
