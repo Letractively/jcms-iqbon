@@ -8,6 +8,11 @@ public class PushRecord extends CMSDomain {
   private static final long serialVersionUID = 1L;
 
   /**
+   * 默认权限
+   */
+  public static final int DEFAULT_LSPRI = 60;
+
+  /**
    * 推送记录类型
    */
   public static enum PUSH_RECORD_TYPE {
@@ -16,7 +21,7 @@ public class PushRecord extends CMSDomain {
 
   private int indexid;
    
-   private int docid;
+  private String docid;
    
    private String modelName;
    
@@ -48,11 +53,11 @@ public class PushRecord extends CMSDomain {
     this.indexid = indexid;
   }
 
-  public int getDocid() {
+  public String getDocid() {
     return docid;
   }
 
-  public void setDocid(int docid) {
+  public void setDocid(String docid) {
     this.docid = docid;
   }
 

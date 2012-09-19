@@ -12,14 +12,19 @@ import com.iqbon.jcms.util.KeyConstant;
  */
 public class JCMSAction {
 
+  /**
+   * 未登录的提醒消息
+   */
+  protected String UNLOGIN_ERROR_MESSAGE = "请先登录";
+
   protected ErrorModelAndView errorMav = new ErrorModelAndView();
 
   /**
    * 获取错误页面的url
    * @return
    */
-  public String getErrorUrl() {
-    return "redirect:/admin/common/error.do";
+  public String getErrorUrl(String errorInfo) {
+    return "redirect:/admin/common/error.do?errorInfo=" + errorInfo;
   }
 
   /**
@@ -30,5 +35,14 @@ public class JCMSAction {
   protected User getUserFromSession(HttpSession session) {
     User user = (User) session.getAttribute(KeyConstant.SESSION_KEY_USER);
     return user;
+  }
+
+  /**
+   * 跳转到指定页面
+   * @param url
+   * @return
+   */
+  protected String redirect(String url) {
+    return "redirect:" + url;
   }
 }

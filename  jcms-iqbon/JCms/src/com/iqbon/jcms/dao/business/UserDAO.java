@@ -65,7 +65,7 @@ public class UserDAO{
    * @return
    */
   public User validationUser(String userName, String password) {
-    String sql = "select user_name , bu_user.position_num ,email , telephone , position_name"
+    String sql = "select user_name , bu_user.position_num ,email , telephone , position_name,"
         + " nickname, mobile from bu_user left join bu_position on bu_user.position_num = bu_position.position_num "
         + " where bu_user.del = 0 and  bu_user.user_name = :userName and "
         + "bu_user.password = password(:password)";
@@ -98,7 +98,7 @@ public class UserDAO{
    * @return
    */
   public int updateUserInfo(User user) {
-    String sql = "update bu_user set password=password(:password) ,position_num=:positionNum ,"
+    String sql = "update bu_user set position_num=:positionNum ,"
         + " email=:email , telephone=:telephone , mobile=:mobile , nickname=:nickName "
         + "where user_name = :userName";
     SqlParameterSource paramMap = new BeanPropertySqlParameterSource(user);
@@ -132,6 +132,20 @@ public class UserDAO{
     map.put("userName", userName);
     SqlParameterSource paramMap = new MapSqlParameterSource(map);
     return namedParameterJdbcTemplate.queryForObject(sql, paramMap, new UserMapper());
+  }
 
+  /**
+   * 修改用户密码
+   * @param userName
+   * @param password
+   * @return
+   */
+  public int updatePassword(String userName, String password) {
+    String sql = "update bu_user set password = password(:password) where user_name = :userName";
+    Map<String, String> map = new HashMap<String, String>(2);
+    map.put("userName", userName);
+    map.put("password", password);
+    SqlParameterSource paramMap = new MapSqlParameterSource(map);
+    return namedParameterJdbcTemplate.update(sql, paramMap);
   }
 }

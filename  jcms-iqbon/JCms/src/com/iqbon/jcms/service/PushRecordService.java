@@ -151,4 +151,5 @@ public class PushRecordService {
     pushRecordDAO.deletePushRecords(indexList);
     return pushRecordDAO.insertPushRecords(insertList);
   }
+  
 }

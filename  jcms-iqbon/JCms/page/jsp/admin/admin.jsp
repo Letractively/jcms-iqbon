@@ -8,7 +8,7 @@
 <frameset rows="40,*,35" frameborder="0" border="0" framespacing="0">
 <frame src="/admin/user/userSessionInfo.do" scrolling="no"/>
 <frameset cols="170,*">
-<frame src="/admin/common/leftMenu.do" scrolling="auto"/>
+<frame src="/admin/common/leftContentManager.do" scrolling="auto" name="left"/>
 <frame src="/admin/main.do" scrolling="auto" name="mainFrame" />
 </frameset>
 <frame src="/jsp/admin/footer.html" scrolling="no"  />

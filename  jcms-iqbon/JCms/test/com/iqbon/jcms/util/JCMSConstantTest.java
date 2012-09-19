@@ -4,6 +4,8 @@ import junit.framework.TestCase;
 
 import org.apache.log4j.Logger;
 
+import com.iqbon.jcms.domain.Doc;
+
 public class JCMSConstantTest extends TestCase {
 
   private static final Logger logger = Logger.getLogger(JCMSConstantTest.class);
@@ -18,6 +20,11 @@ public class JCMSConstantTest extends TestCase {
 
   public void testCreateModelUrl() {
     String url = JCMSConstant.createModelUrl("test", ".html");
+    logger.info(url);
+  }
+
+  public void testCreateDocUrl() {
+    String url = JCMSConstant.createDocUrl("test", Doc.docType.normal.ordinal());
     logger.info(url);
   }
 

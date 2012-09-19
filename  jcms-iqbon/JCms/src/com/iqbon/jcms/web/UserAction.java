@@ -19,11 +19,12 @@ import com.iqbon.jcms.domain.User;
 import com.iqbon.jcms.service.UserService;
 import com.iqbon.jcms.util.JCMSProperties;
 import com.iqbon.jcms.util.KeyConstant;
+import com.iqbon.jcms.web.util.JCMSAction;
 
 @Controller
 @Scope("prototype")
 @RequestMapping("/admin/user")
-public class UserAction {
+public class UserAction extends JCMSAction {
 
   private Logger logger = Logger.getLogger(UserAction.class);
   @Autowired
@@ -60,7 +61,7 @@ public class UserAction {
           view.setViewName("redirect:/admin/common/index.do");
         logger.info("user:" + user.getUserName() + " login");
       } else {//验证码错误
-          view.setViewName(KeyConstant.ERROR_PAGE);
+        return errorMav;
         }
       }      
     return view;
@@ -90,6 +91,75 @@ public class UserAction {
     User user = userService.getUserInfoByUserName(userName);
     view.addObject("user", user);
     view.setViewName(KeyConstant.ADMIN_JSP_PATH + "user");
+    return view;
+  }
+  
+  /**
+   * 修改用户信息
+   * @param userName
+   * @param email
+   * @param telephone
+   * @param mobile
+   * @return
+   */
+  @RequestMapping(value = "/modifyUserInfo.do")
+  public ModelAndView modifyUserInfo(@RequestParam("userName")
+  String userName, @RequestParam("nickname")
+  String nickname, @RequestParam(value = "email", required = false)
+  String email, @RequestParam(value = "telephone", required = false)
+  String telephone, @RequestParam(value = "mobile", required = false)
+  String mobile) {
+
+    User user = new User();
+    user.setUserName(userName);
+    user.setNickName(nickname);
+    user.setEmail(email);
+    user.setTelephone(telephone);
+    user.setMobile(mobile);
+    int number = userService.modifyUserInfo(user);
+    if (number > 0) {
+      ModelAndView view = new ModelAndView();
+      view.addObject("user", user);
+      view.setViewName(KeyConstant.ADMIN_JSP_PATH + "user");
+      return view;
+    } else {
+      return errorMav;
+    }
+  }
+
+  /**
+   * 修改用户密码
+   * @param userName
+   * @param password
+   * @return
+   */
+  @RequestMapping(value = "/modifyUserPassword.do")
+  public ModelAndView updatePassword(@RequestParam("userName")
+  String userName, @RequestParam("password")
+  String password, @RequestParam("oldPassword")
+  String oldPassword) {
+    User user = userService.updatePasswordByUserName(userName, password, oldPassword);
+    if (null == user) {
+      return errorMav;
+    } else {
+      ModelAndView view = new ModelAndView();
+      view.addObject("userName", user.getUserName());
+      view.setViewName(KeyConstant.ADMIN_JSP_PATH + "updatePassword");
+      return view;
+    }
+  }
+
+  /**
+   * 显示修改用户密码的页面
+   * @param userName
+   * @return
+   */
+  @RequestMapping(value = "/showModifyUserPassword.do")
+  public ModelAndView showUpdatePassword(@RequestParam("userName")
+  String userName) {
+    ModelAndView view = new ModelAndView();
+    view.addObject("userName", userName);
+    view.setViewName(KeyConstant.ADMIN_JSP_PATH + "updatePassword");
     return view;
   }
 }

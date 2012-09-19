@@ -8,6 +8,8 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 
+import com.iqbon.jcms.domain.Doc;
+
 /**
  * JCMS的全局变量
  * @author hp
@@ -15,6 +17,7 @@ import org.apache.commons.lang3.time.DateFormatUtils;
  */
 public class JCMSConstant {
   
+  private static JCMSProperties propertiy = JCMSProperties.getInstance();
 
   /**
    * 生成一个topicID
@@ -43,23 +46,60 @@ public class JCMSConstant {
    * @return
    */
   public static String createModelUrl(String modelName, String suffix) {
-    JCMSProperties propertiy= JCMSProperties.getInstance();
     Calendar calendar = Calendar.getInstance();
     int year = calendar.get(Calendar.YEAR);
     int month = calendar.get(Calendar.MONTH) + 1;
     int day = calendar.get(Calendar.DATE);
     StringBuffer sb = new StringBuffer();
     return sb.append(propertiy.getHost()).append("/m/").append(year).append("/").append(month)
-        .append("/")
-        .append(day).append(modelName).append(suffix).toString();
+        .append("/").append(day).append("/").append(modelName).append(suffix).toString();
   }
   
   /**
-   * 根据输出页面的地址返回输出页面的路径
+   * 生成文章的URL
+   * @param docid
+   * @param type
+   * @return
+   */
+  public static String createDocUrl(String docid, int type) {
+    Calendar calendar = Calendar.getInstance();
+    int year = calendar.get(Calendar.YEAR);
+    int month = calendar.get(Calendar.MONTH) + 1;
+    int day = calendar.get(Calendar.DATE);
+    String docType = "doc";
+    if(type==Doc.docType.picture.ordinal()){
+      docType = "pic";
+    }else if(type==Doc.docType.video.ordinal()){
+      docType = "vid";
+    }
+    StringBuffer sb = new StringBuffer();
+    return sb.append(propertiy.getHost()).append("/").append(docType).append("/").append(year)
+        .append("/").append(month).append("/").append(day).append("/").append(docid)
+        .append(".html").toString();
+  }
+
+  /**
+   * 根据模板输出页面的url返回输出页面的路径
    * @param url
    * @return
    */
   public static File createModelOutputFile(String url) {
+    if (StringUtils.isEmpty(url)) {
+      return null;
+    }
+    JCMSProperties propertiy = JCMSProperties.getInstance();
+    String path = propertiy.getOutFilePath();
+    String host = propertiy.getHost();
+    String fileURI = path + url.replace(host, "");
+    return new File(fileURI);
+  }
+
+  /**
+   * 根据文章url返回输出文章页面的路径
+   * @param url
+   * @return
+   */
+  public static File createDocOutputFile(String url) {
     if (StringUtils.isEmpty(url)) {
       return null;
     }

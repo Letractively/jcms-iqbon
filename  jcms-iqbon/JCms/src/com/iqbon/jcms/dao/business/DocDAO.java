@@ -33,8 +33,8 @@ public class DocDAO {
    * @param doc
    */
   public int insertDoc(Doc doc) {
-    String sql = "insert into bu_doc(title,content,digest,modify_user,del,reporter,last_modify,url,type,keyword) "
-        + "values(:title,:content,:digest,:modifyUser,'0',:reporter,now(),:url,:type,:keyword)";
+    String sql = "insert into bu_doc(docid,title,content,digest,modify_user,del,reporter,last_modify,url,type,keyword,model_name,status) "
+        + "values(:docid,:title,:content,:digest,:modifyUser,'0',:reporter,now(),:url,:type,:keyword,:modelName,status)";
     SqlParameterSource paramMap = new BeanPropertySqlParameterSource(doc);
     return namedParameterJdbcTemplate.update(sql, paramMap);
   }
@@ -44,7 +44,7 @@ public class DocDAO {
    * @param docid
    * @return
    */
-  public Doc queryDocById(int docid) {
+  public Doc queryDocById(String docid) {
     String sql = "select * from bu_doc where docid = :docid";
     Map<String, Object> map = new HashMap<String, Object>();
     map.put("docid", docid);
@@ -58,9 +58,21 @@ public class DocDAO {
    */
   public int updateDoc(Doc doc) {
     String sql = "update bu_doc set title=:title"
-        + ",content=:content,digest=:digest,modify_user=:modifyUser,del=:delete,"
-        + "reporter=:reporter,url=:url,type=:type,keyword=:keyword,last_modify = now() where docid =:docid";
+        + ",content=:content,digest=:digest,modify_user=:modifyUser,"
+        + "reporter=:reporter,url=:url,type=:type,keyword=:keyword,model_name=:modelName,status=:status,last_modify = now() where docid =:docid";
     SqlParameterSource paramMap = new BeanPropertySqlParameterSource(doc);
     return namedParameterJdbcTemplate.update(sql, paramMap);
+  }
+
+  /**
+   * 批量删除文章
+   * @param idList
+   * @return
+   */
+  public int deleteDoc(String docid) {
+    String sql = "update bu_doc set del = 1 where docid=:docid";
+    Map<String, Object> map = new HashMap<String, Object>();
+    map.put("docid", docid);
+    return namedParameterJdbcTemplate.update(sql, map);
   }
 }

@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,7 +33,8 @@ public class ModelService {
 
   /**
    * 根据栏目获取模板列表
-   * @param topicid
+   * @param topicid 
+   *  栏目ID，空字符串""获取系统相关的模板，如文章模板
    * @return
    */
   public List<Model> getModelByTopic(String topicid, int type) {
@@ -140,14 +140,11 @@ public class ModelService {
    * @throws IOException 
    */
   public void publishModelContent(Model model) throws IOException {
-    logger.info("发布模板" + ToStringBuilder.reflectionToString(model));
     String output = velocityService.parse(model.getContent());
-    logger.info("输出内容" + output);
     File file = JCMSConstant.createModelOutputFile(model.getUrl());
     if (file == null) {
       throw new IOException("获取模板uri出错");
     }
-    logger.info(ToStringBuilder.reflectionToString(file));
     String encoding = jcmsProperties.getOutFileCoding();
     FileUtils.write(file, output, encoding);
   }

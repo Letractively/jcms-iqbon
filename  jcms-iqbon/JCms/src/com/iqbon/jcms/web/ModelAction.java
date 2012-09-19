@@ -127,7 +127,7 @@ public class ModelAction extends JCMSAction {
   int type, HttpSession session) {
     User user = getUserFromSession(session);
     if (user == null) {
-      return getErrorUrl();
+      return getErrorUrl(UNLOGIN_ERROR_MESSAGE);
     }
     String url = JCMSConstant.createModelUrl(modelName, suffix);
     Model model = new Model();
@@ -151,18 +151,18 @@ public class ModelAction extends JCMSAction {
     int insertPushRecord =pushRecordService.addBlankDoc(title, null, url, topicid, 60, user.getUserName(), null);
     if(insertModel<=0){
       logger.error("插入模板失败：" + ToStringBuilder.reflectionToString(model));
-      return getErrorUrl();
+      return getErrorUrl("插入模板失败");
     }
     if(insertPushRecord<=0){
       logger.error("插入空文章失败");
-      return getErrorUrl();
+      return getErrorUrl("插入空文章失败");
     }
     if (status == Model.modelStatus.publish.ordinal()) {//发布模板
       try {
         modelService.publishModelContent(model);
       } catch (IOException e) {
         logger.error("输出模板页面出错，modelName=" + model.getModelName(), e);
-        return getErrorUrl();
+        return getErrorUrl("插入空文章失败");
       }
       return "redirect:/admin/topic/topicPage.do?topicid=" + topicid + "&pageNum=" + pageNum
           + "&type=" + type;
@@ -194,7 +194,7 @@ public class ModelAction extends JCMSAction {
   int type, HttpSession session) {
     User user = getUserFromSession(session);
     if (user == null) {
-      return getErrorUrl();
+      return getErrorUrl(UNLOGIN_ERROR_MESSAGE);
     }
     Model model = new Model();
     model.setModelName(modelName);
@@ -215,14 +215,14 @@ public class ModelAction extends JCMSAction {
     int updateModel = modelService.modifyModel(model);
     if (updateModel <= 0) {
       logger.error("插入模板失败：" + ToStringBuilder.reflectionToString(model));
-      return getErrorUrl();
+      return getErrorUrl("插入模板失败");
     }
     if (status == Model.modelStatus.publish.ordinal()) {
       try {
         modelService.publishModelContent(model);
       } catch (IOException e) {
         logger.error("输出模板页面出错，modelName=" + model.getModelName(), e);
-        return getErrorUrl();
+        return getErrorUrl("输出模板页面出错");
       }
       return "redirect:/admin/topic/topicPage.do?topicid=" + topicid + "&pageNum=" + pageNum
           + "&type=" + type;
@@ -250,14 +250,14 @@ public class ModelAction extends JCMSAction {
   int type, HttpSession session) {
     User user = getUserFromSession(session);
     if (user == null) {
-      return getErrorUrl();
+      return getErrorUrl(UNLOGIN_ERROR_MESSAGE);
     }
     int deleteNum = modelService.deleteModel(modelName, user.getUserName());
     if (deleteNum > 0) {
       return "redirect:/admin/topic/topicPage.do?topicid=" + topicid + "&pageNum=" + pageNum
           + "&type=" + type;
     } else {
-      return getErrorUrl();
+      return getErrorUrl("删除文章失败");
     }
   }
 }

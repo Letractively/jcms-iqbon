@@ -72,11 +72,12 @@
 			<div class="form-inline ">
 					<button class="btn-small" type="button">预览</button>&nbsp;&nbsp;
 					<button class="btn-small" type="button" onclick="save()">保存</button>&nbsp;&nbsp;
-					<c:if test="${topicid!=''&&topicid!=null }">
-					<button class="btn-small btn-primary" type="button" onclick="setPublish();save();">发布</button>
-					</c:if>
+					
 			</div>
 			<hr/>
+			<c:if test="${topicid!=''&&topicid!=null }">
+					<button class="btn-small btn-primary" type="button" onclick="setPublish();save();">发布</button>
+			</c:if>
 			<button onclick="deleteModel();" class="btn-small btn-danger" type="button">放到回收站</button>
 			<hr/>
 			
