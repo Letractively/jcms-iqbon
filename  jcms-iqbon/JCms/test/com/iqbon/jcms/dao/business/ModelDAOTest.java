@@ -73,4 +73,9 @@ public class ModelDAOTest extends TestCase {
     logger.info(number);
   }
 
+  public void testUpdateModelRefresh() {
+    model.setRate(30);
+    int number = modelDAO.updateModelRefresh(model);
+    logger.info(number);
+  }
 }
