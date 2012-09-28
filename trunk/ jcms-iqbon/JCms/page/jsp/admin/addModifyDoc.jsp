@@ -7,6 +7,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link href="/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/ckeditor/_samples/sample.css" />
 <style type="text/css">
 			div {
 				margin-bottom: 9px;
@@ -28,7 +29,7 @@
 	</div>
 	<div>
 		<label>正文</label>
-		<textarea rows="" cols="30" class="span10"  style="height: 350px" name="content">${doc.content }</textarea>
+		<textarea rows="" cols="30" class="span10"  style="height: 350px" name="content" id="content">${doc.content }</textarea>
 	</div>
 	<div class="form-inline ">
 		<label>关键字:</label><input value="${doc.keyword }" type="text" name="keyword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -66,6 +67,7 @@
 </body>
 
 <script src="/js/jquery.js"></script>
+<script src="/ckeditor/ckeditor.js"></script>
 <script type="text/javascript">
 	function save(){
 		<c:if test="${doc==null||doc=='' }">
@@ -87,5 +89,6 @@
 	function setPublish(){
 		$('#status').val('1');
 	}
+	CKEDITOR.replace('content'); 
 </script>
 </html>
