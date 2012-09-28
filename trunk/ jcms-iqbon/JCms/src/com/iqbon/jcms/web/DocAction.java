@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.iqbon.jcms.domain.Doc;
+import com.iqbon.jcms.domain.DocLog;
 import com.iqbon.jcms.domain.Model;
 import com.iqbon.jcms.domain.PushRecord;
 import com.iqbon.jcms.domain.User;
@@ -64,7 +65,9 @@ public class DocAction extends JCMSAction {
     }
     if (StringUtils.isNotEmpty(docid)) {
       Doc doc = docService.getDocById(docid);
+      List<DocLog> logList = docService.getDocLogByDocid(docid);
       view.addObject("doc", doc);
+      view.addObject("logList", logList);
     }
     view.addObject("user", user);
     view.addObject("topicid", topicid);
@@ -218,8 +221,9 @@ public class DocAction extends JCMSAction {
   String topicid, @RequestParam("pageNum")
   int pageNum, @RequestParam("type")
   int type, @RequestParam("docid")
-  String docid) {
-    int number = docService.deleteDoc(docid);
+  String docid, HttpSession session) {
+    User user = getUserFromSession(session);
+    int number = docService.deleteDoc(docid, user.getUserName());
     if (number > 0) {
       return redirect("/admin/topic/topicPage.do?pageNum=" + pageNum + "&type=" + type
           + "&topicid=" + topicid);

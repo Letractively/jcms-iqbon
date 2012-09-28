@@ -118,4 +118,15 @@ public class ModelDAO {
     return namedParameterJdbcTemplate.update(sql, map);
   }
 
+  /**
+   * 更新模板刷新信息
+   * @param model
+   * @return
+   */
+  public int updateModelRefresh(Model model) {
+    String sql = "update bu_model_refresh set rate=:rate,time_out=:timeout where model_name = :modelName";
+    SqlParameterSource paramMap = new BeanPropertySqlParameterSource(model);
+    return namedParameterJdbcTemplate.update(sql, paramMap);
+  }
+
 }

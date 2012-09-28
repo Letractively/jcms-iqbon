@@ -7,9 +7,21 @@ package com.iqbon.jcms.domain;
  */
 public class ModelLog extends CMSDomain {
 
+  /**
+   * 模板增加的日志描述
+   */
   public static final String MODEL_ADD_COMMON = " 创建了模板";
+  /**
+   * 模板修改的日志描述
+   */
   public static final String MODEL_MODIFY_COMMON = " 修改了模板";
+  /**
+   * 模板删除的日志描述
+   */
   public static final String MODEL_DELETE_COMMON = "删除了模板";
+  /**
+   * 模板发布的日志描述
+   */
   public static final String MODEL_PUBLISH_COMMON = "发布了模板";
 
   private String modelName;

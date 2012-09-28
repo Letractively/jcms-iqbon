@@ -2,6 +2,8 @@ package com.iqbon.jcms.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
@@ -10,7 +12,9 @@ import org.springframework.stereotype.Service;
 
 import com.iqbon.jcms.dao.business.DocDAO;
 import com.iqbon.jcms.dao.business.PushRecordDAO;
+import com.iqbon.jcms.dao.system.DocLogDAO;
 import com.iqbon.jcms.domain.Doc;
+import com.iqbon.jcms.domain.DocLog;
 import com.iqbon.jcms.domain.Model;
 import com.iqbon.jcms.util.JCMSConstant;
 import com.iqbon.jcms.util.JCMSProperties;
@@ -34,13 +38,22 @@ public class DocService {
   @Autowired
   private ModelService modelService;
 
+  @Autowired
+  private DocLogDAO docLogDAO;
+
   /**
    * 添加文章
    * @param doc
    * @return
    */
   public int addDoc(Doc doc) {
-    return docDAO.insertDoc(doc);
+    int insertNum = docDAO.insertDoc(doc);
+    DocLog docLog = new DocLog();
+    docLog.setDocid(doc.getDocid());
+    docLog.setContent(DocLog.DOC_ADD_COMMON);
+    docLog.setTime(new Date());
+    docLog.setUserName(doc.getLastModify());
+    return insertNum;
   }
 
   /**
@@ -49,7 +62,12 @@ public class DocService {
    * @return
    */
   public int modifyDoc(Doc doc) {
-    return docDAO.updateDoc(doc);
+    int modifyNum = docDAO.updateDoc(doc);
+    DocLog docLog = new DocLog();
+    docLog.setContent(DocLog.DOC_MODIFY_COMMON);
+    docLog.setTime(new Date());
+    docLog.setUserName(doc.getLastModify());
+    return modifyNum;
   }
 
   /**
@@ -62,17 +80,22 @@ public class DocService {
   }
 
   /**
-   * 批量删除文章
+   * 删除文章
    * @param idList
    * @return
    */
-  public int deleteDoc(String docid) {
+  public int deleteDoc(String docid, String userName) {
     int deleteNum = docDAO.deleteDoc(docid);
     if (deleteNum > 0) {
       int deletePush = pushRecordDAO.deletePushRecordByDocid(docid);
       if (deletePush <= 0) {
         logger.error("删除文章" + docid + "推送记录失败 ");
         return 0;
+      } else {
+        DocLog docLog = new DocLog();
+        docLog.setContent(DocLog.DOC_DELETE_COMMON);
+        docLog.setTime(new Date());
+        docLog.setUserName(userName);
       }
     } else {
       logger.error("删除文章" + docid + "失败");
@@ -105,6 +128,20 @@ public class DocService {
       throw new IOException("获取模板uri出错");
     }
     FileUtils.write(file, docContent, encoding);
+    DocLog docLog = new DocLog();
+    docLog.setContent(DocLog.DOC_PUBLISH_COMMON);
+    docLog.setTime(new Date());
+    docLog.setUserName(doc.getLastModify());
     return docContent;
   }
+
+  /**
+   * 获取指定文章的操作日志
+   * @param docid
+   * @return
+   */
+  public List<DocLog> getDocLogByDocid(String docid) {
+    return docLogDAO.queryDocLogByDocid(docid);
+  }
+
 }

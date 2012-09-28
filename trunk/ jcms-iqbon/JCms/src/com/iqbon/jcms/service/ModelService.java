@@ -2,9 +2,11 @@ package com.iqbon.jcms.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -131,7 +133,13 @@ public class ModelService {
     if (logNumber <= 0) {
       logger.error("插入模板日志失败");
     }
-    return modelDAO.deleteModel(modelName);
+    Model model = modelDAO.queryModelByModelName(modelName);
+    int delNum = modelDAO.deleteModel(modelName);
+    if (delNum > 0) {
+      model.setTimeout(DateFormatUtils.ISO_DATETIME_FORMAT.format(new Date()));
+      modelDAO.updateModelRefresh(model);
+    }
+    return delNum;
   }
 
   /**
