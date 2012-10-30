@@ -17,6 +17,11 @@ public class JCMSAction {
    */
   protected String UNLOGIN_ERROR_MESSAGE = "请先登录";
 
+  /**
+   * 跳转语句头
+   */
+  private static final String REDIRECT_HEAD = "redirect:";
+
   protected ErrorModelAndView errorMav = new ErrorModelAndView();
 
   /**
@@ -39,10 +44,10 @@ public class JCMSAction {
 
   /**
    * 跳转到指定页面
-   * @param url
+   * @param url，如/quartz/jobList.do
    * @return
    */
   protected String redirect(String url) {
-    return "redirect:" + url;
+    return REDIRECT_HEAD + url;
   }
 }

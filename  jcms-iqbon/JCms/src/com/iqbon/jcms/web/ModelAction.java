@@ -164,12 +164,12 @@ public class ModelAction extends JCMSAction {
         logger.error("输出模板页面出错，modelName=" + model.getModelName(), e);
         return getErrorUrl("插入空文章失败");
       }
-      return "redirect:/admin/topic/topicPage.do?topicid=" + topicid + "&pageNum=" + pageNum
-          + "&type=" + type;
+      return redirect("/admin/topic/topicPage.do?topicid=" + topicid + "&pageNum=" + pageNum
+          + "&type=" + type);
 
     } else {
-      return "redirect:/admin/model/addModifyModelPage.do?topicid=" + topicid + "&pageNum="
-          + pageNum + "&type=" + type + "&modelName=" + modelName + "&modelType=" + modelType;
+      return redirect("/admin/model/addModifyModelPage.do?topicid=" + topicid + "&pageNum="
+          + pageNum + "&type=" + type + "&modelName=" + modelName + "&modelType=" + modelType);
     }
   }
 
@@ -224,12 +224,12 @@ public class ModelAction extends JCMSAction {
         logger.error("输出模板页面出错，modelName=" + model.getModelName(), e);
         return getErrorUrl("输出模板页面出错");
       }
-      return "redirect:/admin/topic/topicPage.do?topicid=" + topicid + "&pageNum=" + pageNum
-          + "&type=" + type;
+      return redirect("/admin/topic/topicPage.do?topicid=" + topicid + "&pageNum=" + pageNum
+          + "&type=" + type);
 
     } else {
-      return "redirect:/admin/model/addModifyModelPage.do?topicid=" + topicid + "&pageNum="
-          + pageNum + "&type=" + type + "&modelName=" + modelName + "&modelType=" + modelType;
+      return redirect("/admin/model/addModifyModelPage.do?topicid=" + topicid + "&pageNum="
+          + pageNum + "&type=" + type + "&modelName=" + modelName + "&modelType=" + modelType);
     }
   }
 

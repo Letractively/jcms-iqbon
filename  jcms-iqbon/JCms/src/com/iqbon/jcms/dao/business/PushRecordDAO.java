@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -27,7 +28,8 @@ public class PushRecordDAO {
   private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
   
   @Autowired
-  public void setDataSource(DataSource dataSource) {
+  public void setDataSource(@Qualifier("dataSource")
+  DataSource dataSource) {
     this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
   }
 
