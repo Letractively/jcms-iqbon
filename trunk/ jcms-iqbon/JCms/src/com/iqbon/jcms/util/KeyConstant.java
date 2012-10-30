@@ -43,6 +43,11 @@ public class KeyConstant {
   public static final String ADMIN_JSP_PATH = "/jsp/admin/";
 
   /**
+   * 定时任务JSP路径
+   */
+  public static final String QUARTZ_JSP_PATH = "/jsp/quartz/";
+
+  /**
    * 模板刷新系统码组名
    */
   public static final String CODE_MODEL_REFRESH = "modelRefresh";

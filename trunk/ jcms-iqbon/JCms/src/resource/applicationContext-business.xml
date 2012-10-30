@@ -16,4 +16,12 @@
 	<property name="configLocation" value="classpath:ehcache.xml" />
 </bean>
 
+<bean name="quartzScheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+<property name="dataSource"> 
+	<ref bean="quartzDataSource" /> 
+</property>
+<property name="applicationContextSchedulerContextKey"  value="applicationContext" />
+<property name="configLocation" value="classpath:quartz.properties"/>
+</bean> 
+
 </beans>
