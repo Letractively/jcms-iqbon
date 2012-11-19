@@ -3,6 +3,7 @@ package com.iqbon.jcms.web;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +56,7 @@ public class QuartzAction extends JCMSAction {
    * @param jobName
    * @return
    */
+  @RequestMapping(value = "/jobDelete.do")
   public String deleteJob(@RequestParam("jobName")
   String jobName) {
     try {
@@ -75,8 +77,12 @@ public class QuartzAction extends JCMSAction {
    * @param hourPattern
    * @return
    */
+  @RequestMapping(value = "/jobAdd.do")
   public String addParseModelJob(@RequestParam("jobName") String jobName,@RequestParam("topicIds") String topicIds,@RequestParam(value = "description", required = false) String description,@RequestParam("minutePattern") String minutePattern,@RequestParam("hourPattern") String hourPattern){
-    List<String> topicList = Arrays.asList(topicIds.split(","));
+    List<String> topicList = null;
+    if (StringUtils.isNotBlank(topicIds)) {
+      topicList = Arrays.asList(topicIds.split(","));
+    }
     try {
       quartzService.addParseModelJob(jobName, topicList, description, minutePattern, hourPattern);
       return redirect("/quartz/jobList.do");
@@ -84,6 +90,17 @@ public class QuartzAction extends JCMSAction {
       logger.error("增加定时刷新模板任务失败", e);
       return getErrorUrl("增加定时任务失败");
     }
+  }
+
+  /**
+   * 显示添加模板刷新任务的页面
+   * @return
+   */
+  @RequestMapping(value = "/showJobAdd.do")
+  public ModelAndView showAddParseModelJob() {
+    ModelAndView mav = new ModelAndView();
+    mav.setViewName(KeyConstant.QUARTZ_JSP_PATH + "quartzJobAdd");
+    return mav;
   }
 
 }
