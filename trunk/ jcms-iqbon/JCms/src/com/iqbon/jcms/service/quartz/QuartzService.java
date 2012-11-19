@@ -62,8 +62,9 @@ public class QuartzService {
     dataMap.put(Quartz.JOB_LOG_KEY, new StringBuilder());
     dataMap.put(Quartz.CREATE_JOB_TIME_KEY, DateFormatUtils.ISO_DATETIME_FORMAT.format(new Date()));
     JobDetail jobDetail = JobBuilder.newJob(ParseModelJob.class)
-        .withIdentity(jobName, Scheduler.DEFAULT_GROUP)
-        .withDescription(description).usingJobData(dataMap).build();
+        .withIdentity(jobName, Scheduler.DEFAULT_GROUP).withDescription(description)
+        .usingJobData(dataMap).build();
+    //    JobDetailBean jobDetail = new JobDetailBean();
     //初始化CronTrigger
     String cronPattern = "0 " + minutePattern + " " + hourPattern + " * * ?";
     CronTrigger trigger = TriggerBuilder.newTrigger()

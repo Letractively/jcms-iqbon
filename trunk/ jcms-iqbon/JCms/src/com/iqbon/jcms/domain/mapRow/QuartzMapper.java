@@ -26,6 +26,7 @@ public class QuartzMapper implements RowMapper<Quartz> {
     quartz.setStartTime(DateFormatUtils.format(rs.getLong("start_time"), "yyyy-MM-dd HH:mm:ss"));
     quartz.setEndTime(DateFormatUtils.format(rs.getLong("end_time"), "yyyy-MM-dd HH:mm:ss"));
     quartz.setStatus(rs.getString("trigger_state"));
+    quartz.setDescription(rs.getString("DESCRIPTION"));
     return quartz;
   }
 

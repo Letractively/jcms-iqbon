@@ -33,7 +33,10 @@ public class QuartzDAO {
    * @return
    */
   public List<Quartz> selectAllQuartJob() {
-    String sql  = "select * from QRTZ_TRIGGERS order by start_time";
+    String sql = "select QRTZ_JOB_DETAILS.JOB_NAME,QRTZ_TRIGGERS.TRIGGER_NAME"
+        + ",NEXT_FIRE_TIME,PREV_FIRE_TIME,TRIGGER_STATE,TRIGGER_TYPE,START_TIME,END_TIME"
+        + ",QRTZ_JOB_DETAILS.DESCRIPTION from QRTZ_TRIGGERS inner join QRTZ_JOB_DETAILS "
+        + " on QRTZ_TRIGGERS.JOB_NAME = QRTZ_JOB_DETAILS.JOB_NAME order by start_time";
     return namedParameterJdbcTemplate.query(sql, new HashMap<String, String>(), new QuartzMapper());
   }
 }
