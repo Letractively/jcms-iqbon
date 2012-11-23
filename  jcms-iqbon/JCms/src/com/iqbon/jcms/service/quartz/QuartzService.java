@@ -13,11 +13,9 @@ import org.quartz.JobBuilder;
 import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
 import org.quartz.JobKey;
-import org.quartz.Matcher;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.TriggerBuilder;
-import org.quartz.impl.matchers.KeyMatcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -72,9 +70,6 @@ public class QuartzService {
         .forJob(jobDetail).withSchedule(CronScheduleBuilder.cronSchedule(cronPattern)).build();
     //添加cornjob
     quartzScheduler.scheduleJob(jobDetail, trigger);
-    //添加listener
-    Matcher<JobKey> matcher = KeyMatcher.keyEquals(jobDetail.getKey());
-    quartzScheduler.getListenerManager().addJobListener(new QuartzJobListener(jobName), matcher);
   }
 
   /**
