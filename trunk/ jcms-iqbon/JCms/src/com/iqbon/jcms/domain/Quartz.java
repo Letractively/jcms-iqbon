@@ -35,12 +35,8 @@ public class Quartz {
   /**
    * 定时任务启动日志保存的键值
    */
-  public static final String JOB_LOG_KEY = "jobLog";
+  public static final String JOB_FRESH_MINUTE = "freshMinute";
 
-  /**
-   * 解析模板定时任务栏目ID信息保存的键值
-   */
-  public static final String PARSE_MODEL_TOPIC_KEY = "topicIds";
 
   private String jobName;
 

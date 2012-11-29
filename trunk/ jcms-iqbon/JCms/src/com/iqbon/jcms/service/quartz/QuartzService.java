@@ -52,19 +52,18 @@ public class QuartzService {
    * @param hourPattern
    * @throws SchedulerException 
    */
-  public void addParseModelJob(String jobName, List<String> topicIds, String description,
+  public void addParseModelJob(String jobName, String description,
       String minutePattern, String hourPattern) throws SchedulerException {
     //初始化JobDetail
     JobDataMap dataMap = new JobDataMap();
-    dataMap.put(Quartz.PARSE_MODEL_TOPIC_KEY, topicIds);
-    dataMap.put(Quartz.JOB_LOG_KEY, new StringBuilder());
+    dataMap.put(Quartz.JOB_FRESH_MINUTE, minutePattern);
     dataMap.put(Quartz.CREATE_JOB_TIME_KEY, DateFormatUtils.ISO_DATETIME_FORMAT.format(new Date()));
     JobDetail jobDetail = JobBuilder.newJob(ParseModelJob.class)
         .withIdentity(jobName, Scheduler.DEFAULT_GROUP).withDescription(description)
         .usingJobData(dataMap).build();
     //    JobDetailBean jobDetail = new JobDetailBean();
     //初始化CronTrigger
-    String cronPattern = "0 " + minutePattern + " " + hourPattern + " * * ?";
+    String cronPattern = "0 */" + minutePattern + " " + hourPattern + " * * ?";
     CronTrigger trigger = TriggerBuilder.newTrigger()
         .withIdentity(jobName + "_trigger", Scheduler.DEFAULT_GROUP)
         .forJob(jobDetail).withSchedule(CronScheduleBuilder.cronSchedule(cronPattern)).build();

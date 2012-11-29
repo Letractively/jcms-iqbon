@@ -18,6 +18,7 @@ import com.iqbon.jcms.domain.DocLog;
 import com.iqbon.jcms.domain.Model;
 import com.iqbon.jcms.util.JCMSConstant;
 import com.iqbon.jcms.util.JCMSProperties;
+import com.iqbon.jcms.util.NotFoundException;
 
 @Service
 public class DocService {
@@ -108,8 +109,9 @@ public class DocService {
    * @param docid
    * @return
    * @throws IOException
+   * @throws NotFoundException 
    */
-  public String publishDoc(String docid) throws IOException {
+  public String publishDoc(String docid) throws IOException, NotFoundException {
     Doc doc = docDAO.queryDocById(docid);
     if(doc==null){
       logger.error("文章" + docid + "不存在");

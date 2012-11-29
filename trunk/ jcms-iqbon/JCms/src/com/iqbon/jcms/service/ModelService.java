@@ -17,6 +17,7 @@ import com.iqbon.jcms.domain.Model;
 import com.iqbon.jcms.domain.ModelLog;
 import com.iqbon.jcms.util.JCMSConstant;
 import com.iqbon.jcms.util.JCMSProperties;
+import com.iqbon.jcms.util.NotFoundException;
 
 @Service
 public class ModelService {
@@ -92,8 +93,12 @@ public class ModelService {
    * @param modelName
    * @return
    */
-  public Model getModelInfoByModelName(String modelName) {
-    return modelDAO.queryModelByModelName(modelName);
+  public Model getModelInfoByModelName(String modelName) throws NotFoundException {
+    Model model = modelDAO.queryModelByModelName(modelName);
+    if (model.getDelete() == 1) {
+      throw new NotFoundException();
+    }
+    return model;
   }
 
   /**
@@ -156,4 +161,14 @@ public class ModelService {
     String encoding = jcmsProperties.getOutFileCoding();
     FileUtils.write(file, output, encoding);
   }
+
+  /**
+   * 根据刷新频率获取需要刷新的模板名列表
+   * @param fresh
+   */
+  public List<String> getNeedPublishModelByRefresh(String refresh) {
+    List<String> list = modelDAO.queryModelIdByRefresh(refresh);
+    return list;
+  }
+
 }

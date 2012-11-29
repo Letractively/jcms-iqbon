@@ -27,6 +27,7 @@ import com.iqbon.jcms.service.ModelService;
 import com.iqbon.jcms.service.PushRecordService;
 import com.iqbon.jcms.util.JCMSConstant;
 import com.iqbon.jcms.util.KeyConstant;
+import com.iqbon.jcms.util.NotFoundException;
 import com.iqbon.jcms.web.util.JCMSAction;
 
 @Controller
@@ -85,10 +86,15 @@ public class ModelAction extends JCMSAction {
     mav.addObject("model", null);
     mav.addObject("modelType", modelType);
     if (StringUtils.isNotEmpty(modelName)) {
+      try {
       Model model = modelService.getModelInfoByModelName(modelName);
       List<ModelLog> modelLogList = modelService.getModelLogsByModelName(modelName);
       mav.addObject("model", model);
       mav.addObject("modelLogList", modelLogList);
+      } catch (NotFoundException e) {
+        logger.error("修改模板失败", e);
+        return errorMav;
+      }
     }
     mav.setViewName(KeyConstant.ADMIN_JSP_PATH + "addModifyModel");
     return mav;
