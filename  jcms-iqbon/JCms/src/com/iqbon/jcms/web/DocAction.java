@@ -26,6 +26,7 @@ import com.iqbon.jcms.service.ModelService;
 import com.iqbon.jcms.service.PushRecordService;
 import com.iqbon.jcms.util.JCMSConstant;
 import com.iqbon.jcms.util.KeyConstant;
+import com.iqbon.jcms.util.NotFoundException;
 import com.iqbon.jcms.web.util.JCMSAction;
 
 @Controller
@@ -135,6 +136,9 @@ public class DocAction extends JCMSAction {
           } catch (IOException e) {
             logger.error("发布文章失败", e);
             return getErrorUrl("发布文章失败");
+          } catch (NotFoundException e) {
+            logger.error("发布文章失败，文章模板已不存在", e);
+            return getErrorUrl("发布文章失败，文章模板已不存在");
           }
         }
         return redirect("/admin/doc/showAddModifyDoc.do?topicid=" + topicid + "&pageNum=" + pageNum
@@ -199,6 +203,9 @@ public class DocAction extends JCMSAction {
         } catch (IOException e) {
           logger.error("发布文章失败", e);
           return getErrorUrl("发布文章失败");
+        } catch (NotFoundException e) {
+          logger.error("发布文章失败，文章模板已不存在", e);
+          return getErrorUrl("发布文章失败，文章模板已不存在");
         }
       }
       return redirect("/admin/doc/showAddModifyDoc.do?topicid=" + topicid + "&pageNum=" + pageNum
