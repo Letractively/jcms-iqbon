@@ -1,6 +1,5 @@
 package com.iqbon.jcms.service.quartz;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -34,10 +33,8 @@ public class QuartzServiceTest extends TestCase {
   }
 
   public void testAddParseModelJob() {
-    List<String> topicIds = new ArrayList<String>();
-    topicIds.add("135srerwer");
     try {
-      quartzService.addParseModelJob("testjob", topicIds, "afwer", "*/2", "*");
+      quartzService.addParseModelJob("testjob", "afwer", "2", "*");
     } catch (SchedulerException e) {
       logger.error("添加定时任务出错", e);
     }

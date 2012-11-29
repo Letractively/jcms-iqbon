@@ -78,4 +78,11 @@ public class ModelDAOTest extends TestCase {
     int number = modelDAO.updateModelRefresh(model);
     logger.info(number);
   }
+
+  public void testQueryModelIdByRefresh() {
+    List<String> modelNameList = modelDAO.queryModelIdByRefresh(String.valueOf(model.getRate()));
+    for (String modelName : modelNameList) {
+      logger.info(modelName);
+    }
+  }
 }
