@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:ehcache="http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	 http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	 http://www.springframework.org/schema/context
+	 http://www.springframework.org/schema/context/spring-context-3.0.xsd
+	 http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring   
+  	http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring/ehcache-spring-1.1.xsd">
+  	
+	<bean name="quartzScheduler" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref bean="spiderTrigger"/>
+			</list>
+		</property>
+	</bean> 
+	<!-- 定时抓取配置 -->
+	<bean id="spiderTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+                <ref bean="spiderTask"/>
+            </property>
+		<property name="cronExpression">
+                <value>0 */1 * * * ?</value>
+        </property>
+	</bean>
+	
+	<bean id="spiderTask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+            <property name="targetObject">
+                <ref bean="spiderJob"/>
+            </property>
+            <property name="targetMethod">
+                <value>crawl</value>
+            </property>
+     </bean>
+     <bean id="spiderJob" class="com.iqbon.spider.service.crawl.CrawlJob"></bean>
+     <bean id="poolingClientConnectionManager" class="org.apache.http.impl.conn.PoolingClientConnectionManager">
+     </bean>
+     <bean id="crawlService"  class="com.iqbon.spider.service.crawl.CrawlService">
+     	<property name="poolingClientConnectionManager">
+     		<ref bean="poolingClientConnectionManager"/>
+     	</property>
+     </bean>
+</beans>

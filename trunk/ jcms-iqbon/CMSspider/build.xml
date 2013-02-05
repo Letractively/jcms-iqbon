@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="GBK"?>
+<project name="cms" basedir="." default="clean">
+	<property name="src" location="src/java"/>
+	<property name="lib" location="lib"/>
+	<property name="page" location="WebContent"/>
+	<property name="build" location="build"/>
+	<property name="dist" location="dist"/>
+	<property name="classes" location="${dist}/WEB-INF/classes"/>
+	<property name="resource" location="src/resource"></property>
+	
+	<path id="classpath">
+		<fileset  dir="${lib}">
+			<include name="*.jar"/>
+		</fileset>
+	</path>
+	<!-- ================================= 
+	          target: init 
+	         ================================= -->
+    <target name="init" description="初始化 " >
+    	<!--<delete dir="${dist}"></delete>-->
+        <mkdir dir="${build}"/>
+    	<mkdir dir="${dist}"/>
+    </target>
+
+	<!-- ================================= 
+          target: compile              
+         ================================= -->
+    <target name="compile" depends="init" description="编译项目">
+        <javac debuglevel="lines,vars,source"  srcdir="${src}" destdir="${build}" encoding="utf-8"
+>
+        	<classpath  refid="classpath"/>
+        </javac>
+    </target>
+
+	<target name="dist" depends="compile" description="打包项目">
+		<copy todir="${dist}">
+			<fileset dir="${page}"></fileset>
+		</copy>
+		<copy todir="${classes}">
+			<fileset dir="${build}"></fileset>
+		</copy>
+		<copy todir="${classes}">
+			<fileset dir="${resource}"></fileset>
+		</copy>
+		<copy todir="${dist}/WEB-INF/lib">
+			<fileset dir="${lib}"></fileset>
+		</copy>
+	</target>
+	
+	<target name="clean" depends="dist">
+		<delete dir="${build}"></delete>
+	</target>
+</project>
