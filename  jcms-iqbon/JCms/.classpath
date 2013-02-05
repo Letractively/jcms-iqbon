@@ -7,26 +7,15 @@
 	<classpathentry kind="lib" path="lib/commons-lang3-3.0.1.jar"/>
 	<classpathentry kind="lib" path="lib/log4j-1.2.16.jar"/>
 	<classpathentry kind="lib" path="lib/mysql-connector-java-5.1.18-bin.jar"/>
-	<classpathentry kind="lib" path="lib/org.springframework.beans-3.0.6.RELEASE.jar"/>
-	<classpathentry kind="lib" path="lib/org.springframework.context-3.0.6.RELEASE.jar"/>
-	<classpathentry kind="lib" path="lib/org.springframework.core-3.0.6.RELEASE.jar"/>
-	<classpathentry kind="lib" path="lib/org.springframework.expression-3.0.6.RELEASE.jar"/>
-	<classpathentry kind="lib" path="lib/org.springframework.jdbc-3.0.6.RELEASE.jar"/>
 	<classpathentry kind="lib" path="lib/c3p0-0.9.1.2.jar"/>
-	<classpathentry kind="lib" path="lib/org.springframework.transaction-3.0.6.RELEASE.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>
 	<classpathentry kind="lib" path="lib/com.springsource.org.apache.commons.logging-1.1.1.jar"/>
-	<classpathentry kind="lib" path="lib/org.springframework.asm-3.0.6.RELEASE.jar"/>
-	<classpathentry kind="lib" path="lib/org.springframework.web-3.0.6.RELEASE.jar"/>
-	<classpathentry kind="lib" path="lib/org.springframework.web.servlet-3.0.6.RELEASE.jar"/>
 	<classpathentry kind="lib" path="lib/servlet-2_3-fcs-classfiles.jar"/>
 	<classpathentry kind="lib" path="lib/mockito-all-1.9.0.jar"/>
 	<classpathentry kind="lib" path="lib/standard.jar"/>
 	<classpathentry kind="lib" path="lib/jackson-all-1.9.5.jar"/>
 	<classpathentry kind="lib" path="lib/cglib-2.2.2.jar"/>
 	<classpathentry kind="lib" path="lib/ehcache-spring-annotations-1.2.0.jar"/>
-	<classpathentry kind="lib" path="lib/org.springframework.context.support-3.0.6.RELEASE.jar"/>
-	<classpathentry kind="lib" path="lib/org.springframework.aop-3.0.6.RELEASE.jar"/>
 	<classpathentry kind="lib" path="lib/ehcache-core-2.4.5.jar"/>
 	<classpathentry kind="lib" path="lib/aopalliance-1.0.jar"/>
 	<classpathentry kind="lib" path="lib/slf4j-api-1.6.2.jar"/>
@@ -40,5 +29,16 @@
 	<classpathentry kind="lib" path="lib/commons-lang-2.4.jar"/>
 	<classpathentry kind="lib" path="lib/commons-io-2.4.jar"/>
 	<classpathentry kind="lib" path="lib/quartz-all-2.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/org.springframework.aop-3.1.1.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/org.springframework.asm-3.1.1.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/org.springframework.beans-3.1.1.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/org.springframework.context-3.1.1.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/org.springframework.context.support-3.1.1.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/org.springframework.core-3.1.1.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/org.springframework.expression-3.1.1.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/org.springframework.jdbc-3.1.1.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/org.springframework.transaction-3.1.1.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/org.springframework.web-3.1.1.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/org.springframework.web.servlet-3.1.1.RELEASE.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
