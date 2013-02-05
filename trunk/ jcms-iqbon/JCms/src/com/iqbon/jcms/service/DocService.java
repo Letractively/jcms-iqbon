@@ -75,9 +75,14 @@ public class DocService {
    * 根据文章ID获取文章信息
    * @param docid
    * @return
+   * @throws NotFoundException 
    */
-  public Doc getDocById(String docid) {
-    return docDAO.queryDocById(docid);
+  public Doc getDocById(String docid) throws NotFoundException {
+    Doc doc = docDAO.queryDocById(docid);
+    if (doc.getDelete() == 1) {
+      throw new NotFoundException();
+    }
+    return doc;
   }
 
   /**

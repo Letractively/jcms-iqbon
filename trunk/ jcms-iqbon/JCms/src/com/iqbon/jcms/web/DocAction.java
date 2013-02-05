@@ -65,10 +65,15 @@ public class DocAction extends JCMSAction {
       view.addObject("docModelList", docModelList);
     }
     if (StringUtils.isNotEmpty(docid)) {
+      try {
       Doc doc = docService.getDocById(docid);
       List<DocLog> logList = docService.getDocLogByDocid(docid);
       view.addObject("doc", doc);
       view.addObject("logList", logList);
+      } catch (NotFoundException e) {
+        logger.error("修改文章失败", e);
+        return errorMav;
+      }
     }
     view.addObject("user", user);
     view.addObject("topicid", topicid);
