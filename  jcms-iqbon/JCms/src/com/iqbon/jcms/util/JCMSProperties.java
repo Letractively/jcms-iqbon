@@ -8,6 +8,8 @@ import org.apache.log4j.Logger;
 
 public class JCMSProperties {
 
+  private static final String JCMS_PROPERTY = "jcms.properties";
+
   private static JCMSProperties jcmsProperties = new JCMSProperties();
 
   private Logger logger = Logger.getLogger(JCMSProperties.class);
@@ -49,7 +51,7 @@ public class JCMSProperties {
    */
   private void init() throws IOException {
     Properties props = new Properties();
-    InputStream is = this.getClass().getClassLoader().getResourceAsStream("jcms.properties");
+    InputStream is = this.getClass().getClassLoader().getResourceAsStream(JCMS_PROPERTY);
     props.load(is);
     this.host = props.getProperty("jcms.host");
     this.outFileCoding = props.getProperty("jcms.outfile.coding");
