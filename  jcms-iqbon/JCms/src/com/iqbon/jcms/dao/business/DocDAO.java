@@ -67,6 +67,17 @@ public class DocDAO {
   }
 
   /**
+   * 更新文章状态
+   * @param docid
+   * @param status
+   */
+  public int updateDocStatus(Doc doc) {
+    String sql = "update bu_doc set status  = :status where docid = :docid";
+    SqlParameterSource paramMap = new BeanPropertySqlParameterSource(doc);
+    return namedParameterJdbcTemplate.update(sql, paramMap);
+  }
+
+  /**
    * 批量删除文章
    * @param idList
    * @return

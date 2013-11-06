@@ -14,6 +14,8 @@ public class Topic extends CMSDomain {
 
   private String parentTopic;
 
+  private String topicNav;
+
   public String getParentTopic() {
     return parentTopic;
   }
@@ -61,4 +63,13 @@ public class Topic extends CMSDomain {
   public void setTopicTree(String topicTree) {
     this.topicTree = topicTree;
   }
+
+  public String getTopicNav() {
+    return topicNav;
+  }
+
+  public void setTopicNav(String topicNav) {
+    this.topicNav = topicNav;
+  }
+
   }

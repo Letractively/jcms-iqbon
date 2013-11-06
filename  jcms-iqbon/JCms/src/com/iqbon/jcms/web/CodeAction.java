@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -17,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.iqbon.jcms.domain.Code;
 import com.iqbon.jcms.service.CodeService;
 import com.iqbon.jcms.util.KeyConstant;
+import com.iqbon.jcms.web.api.APIConstant;
 import com.iqbon.jcms.web.util.JCMSAction;
 
 @Controller
@@ -67,19 +69,26 @@ public class CodeAction extends JCMSAction {
    */
   @RequestMapping(value = "/addSubCode.do", method = RequestMethod.POST)
   @ResponseBody
-  public Map<String, Boolean> addCode(@RequestParam("groupName")
+  public Map<String, Object> addCode(@RequestParam("groupName")
   String groupName, @RequestParam("codeKey")
   String key, @RequestParam("codeValue")
   String value, @RequestParam("parentKey")
   String parentKey) {
-    Map<String, Boolean> map = new HashMap<String, Boolean>();
-    Code code = new Code();
-    code.setGroupName(groupName);
-    code.setKey(key);
-    code.setParentKey(parentKey);
-    code.setValue(value);
-    int number = codeService.addCode(code);
-    map.put("success", number > 0);
+
+    Map<String, Object> map = new HashMap<String, Object>();
+    boolean isExist = codeService.isCodeExist(groupName, key);
+    if (isExist) {
+      map.put(APIConstant.V_SUCCESS, false);
+      map.put(APIConstant.K_MESSAGE, "该组已经存在相同KEY值的系统码");
+    } else {
+      Code code = new Code();
+      code.setGroupName(groupName);
+      code.setKey(key);
+      code.setParentKey(parentKey);
+      code.setValue(value);
+      int number = codeService.addCode(code);
+      map.put(APIConstant.V_SUCCESS, number > 0);
+    }
     return map;
   }
 
@@ -110,6 +119,35 @@ public class CodeAction extends JCMSAction {
       return this.getAllCodeGroup();
     } else {
       return errorMav;
+    }
+  }
+  
+  /**
+   * 删除子节点
+   * @param groupName
+   * @param key
+   * @param value
+   * @return
+   */
+  @RequestMapping(value = "/deleteSubCode.do", method = RequestMethod.POST)
+  @ResponseBody
+  public Map<String, String> deleteSubCode(@RequestParam("groupName")
+  String groupName, @RequestParam("codeKey")
+  String key) {
+    Map<String, String> result = new HashMap<String, String>();
+    List<Code> list = codeService.getSubCodeByGroupAndParent(groupName, key);
+    if (CollectionUtils.isNotEmpty(list)) {
+      result.put(APIConstant.K_RESULT, APIConstant.V_FAIL);
+      result.put(APIConstant.K_MESSAGE, "还存在子节点，不能删除");
+      return result;
+    } else {
+      int number = codeService.deleteCode(groupName, key);
+      if (number > 0) {
+        result.put(APIConstant.K_RESULT, APIConstant.V_SUCCESS);
+      } else {
+        result.put(APIConstant.K_RESULT, APIConstant.V_FAIL);
+      }
+      return result;
     }
   }
 }

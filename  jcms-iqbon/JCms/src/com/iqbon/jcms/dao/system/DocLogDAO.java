@@ -53,4 +53,5 @@ public class DocLogDAO {
     map.put("docid", docid);
     return namedParameterJdbcTemplate.query(sql, map, new DocLogMapper());
   }
+
 }

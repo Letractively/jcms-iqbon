@@ -202,6 +202,7 @@ public class ModelAction extends JCMSAction {
     if (user == null) {
       return getErrorUrl(UNLOGIN_ERROR_MESSAGE);
     }
+    url = JCMSConstant.refreshModelUrl(url, suffix);
     Model model = new Model();
     model.setModelName(modelName);
     model.setTitle(title);
@@ -260,10 +261,15 @@ public class ModelAction extends JCMSAction {
     }
     int deleteNum = modelService.deleteModel(modelName, user.getUserName());
     if (deleteNum > 0) {
-      return "redirect:/admin/topic/topicPage.do?topicid=" + topicid + "&pageNum=" + pageNum
-          + "&type=" + type;
+      if (StringUtils.isNotEmpty(topicid)) {
+        return redirect("/admin/topic/topicPage.do?topicid=" + topicid + "&pageNum=" + pageNum
+            + "&type=" + type);
+      } else {
+        return redirect("/admin/model/showDocModelList.do");
+      }
     } else {
       return getErrorUrl("删除文章失败");
     }
   }
+
 }

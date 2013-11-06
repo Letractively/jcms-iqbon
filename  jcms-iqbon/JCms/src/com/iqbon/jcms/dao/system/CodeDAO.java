@@ -52,12 +52,12 @@ public class CodeDAO {
    * @param key
    * @return
    */
-  public int deleteCode(String groupName, String key, String parentKey) {
-    String sql = "delete from sys_code where group_name = :groupName and `key`=:key and parent_key = :parentKey";
+  @TriggersRemove(cacheName = "codeCache", removeAll = true)
+  public int deleteCode(String groupName, String key) {
+    String sql = "delete from sys_code where group_name = :groupName and `key`=:key";
     Map<String, String> map = new HashMap<String, String>();
     map.put("groupName", groupName);
     map.put("key", key);
-    map.put("parentKey", parentKey);
     return namedParameterJdbcTemplate.update(sql, map);
   }
 
@@ -110,6 +110,20 @@ public class CodeDAO {
     Map<String, String> map = new HashMap<String, String>();
     map.put("groupName", groupName);
     return namedParameterJdbcTemplate.queryForObject(sql, map, new CodeMapper());
+  }
+
+  /**
+   * 查找同一组中存在相同key值的数量
+   * @param groupName
+   * @param key
+   * @return
+   */
+  public int queryCodeNumByGroupAndKey(String groupName, String key) {
+    String sql = "select count(1) from sys_code where group_name = :groupName and `key` = :key";
+    Map<String, String> map = new HashMap<String, String>();
+    map.put("groupName", groupName);
+    map.put("key", key);
+    return namedParameterJdbcTemplate.queryForInt(sql, map);
   }
 
 }

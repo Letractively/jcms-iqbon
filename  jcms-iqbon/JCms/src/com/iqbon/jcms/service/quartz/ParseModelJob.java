@@ -61,6 +61,6 @@ public class ParseModelJob implements Job {
    */
   private void logEnd(long start, String jobName) {
     long end = System.currentTimeMillis();
-    logger.info(jobName + "刷新完毕，耗时:" + (start - end) + "ms");
+    logger.info(jobName + "刷新完毕，耗时:" + (end - start) + "ms");
   }
 }

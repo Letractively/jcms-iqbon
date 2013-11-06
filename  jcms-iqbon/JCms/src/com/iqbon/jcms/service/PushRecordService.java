@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.iqbon.jcms.dao.business.PushRecordDAO;
 import com.iqbon.jcms.domain.PushRecord;
+import com.iqbon.jcms.util.JCMSConstant;
 
 /**
  * 推送记录service类
@@ -68,6 +69,7 @@ public class PushRecordService {
   public int addBlankDoc(String title, String subTitle, String url, String topicid, int lspri,
       String userName, String img) {
     PushRecord pushRecord = new PushRecord();
+    pushRecord.setIndexid(JCMSConstant.createPushRecordId());
     pushRecord.setTitle(title);
     pushRecord.setSubTitle(subTitle);
     pushRecord.setTopicid(topicid);
@@ -76,7 +78,7 @@ public class PushRecordService {
     pushRecord.setLspri(lspri);
     pushRecord.setType(0);
     pushRecord.setModifyUser(userName);
-    return this.addPushRecord(pushRecord);
+    return addPushRecord(pushRecord);
   }
 
   /**
@@ -94,7 +96,7 @@ public class PushRecordService {
    * @param lspri
    * @return
    */
-  public int updateLspri(int indexid, int lspri, String userName) {
+  public int updateLspri(String indexid, int lspri, String userName) {
     PushRecord pushRecord = pushRecordDAO.queryPushRecordById(indexid);
     pushRecord.setLspri(lspri);
     pushRecord.setModifyUser(userName);
@@ -106,10 +108,11 @@ public class PushRecordService {
    * @param indexid
    * @return
    */
-  public PushRecord getPushRecordById(int indexid) {
+  public PushRecord getPushRecordById(String indexid) {
     PushRecord pushRecord = pushRecordDAO.queryPushRecordById(indexid);
     return pushRecord;
   }
+
 
   /**
    * 批量删除推送记录
@@ -130,6 +133,7 @@ public class PushRecordService {
     List<PushRecord> insertList = new ArrayList<PushRecord>();
     for (PushRecord pushRecord : list) {
       pushRecord.setTopicid(topicid);
+      pushRecord.setIndexid(JCMSConstant.createPushRecordId());
       insertList.add(pushRecord);
     }
     return pushRecordDAO.insertPushRecords(insertList);
@@ -146,10 +150,95 @@ public class PushRecordService {
     List<PushRecord> insertList = new ArrayList<PushRecord>();
     for (PushRecord pushRecord : list) {
       pushRecord.setTopicid(topicid);
+      pushRecord.setIndexid(JCMSConstant.createPushRecordId());
       insertList.add(pushRecord);
     }
     pushRecordDAO.deletePushRecords(indexList);
     return pushRecordDAO.insertPushRecords(insertList);
   }
   
+  /**
+   * 获取指定栏目的推送列表
+   * @param topicid 栏目ID
+   * @param minLspri 最小权重 默认为0
+   * @param maxLspri 最大权重 默认为100
+   * @param isImg 是否有图片
+   * @param startTime 时间范围，最后修改时间在startTime之后，可以为空
+   * @param endTime 时间范围，最后修改时间在startTime之前，可以为空
+   * @param limit 获取多少条记录
+   * @return
+   */
+  public List<PushRecord> getPushRecordByTopic(String topicid, int minLspri, int maxLspri,
+      Boolean isImg, String startTime, String endTime, int limit) {
+    return pushRecordDAO.queryPushRecordByTopic(topicid, minLspri, maxLspri, isImg, startTime,
+        endTime,
+        limit);
+  }
+
+  /**
+   * 获取文章的所有推送记录
+   * @param docid
+   * @return
+   */
+  public List<PushRecord> getPushRecordByDocid(String docid) {
+    return pushRecordDAO.queryPushRecordByDocid(docid);
+  }
+
+  /**
+   * 根据推送记录ID，获取前一推送记录
+   * @param indexid  推送记录ID
+   * @param minLspri 权重最小值0-100
+   * @param maxLspri 权重最大值0-100
+   * @param isImg 是否图片，可以为null
+   * @return
+   */
+  public PushRecord getNextPushRecord(String indexid, int minLspri, int maxLspri, Boolean isImg) {
+    PushRecord pushRecord = pushRecordDAO.queryPushRecordById(indexid);
+    if(pushRecord==null){
+      return null;
+    }else{
+      String topicid  = pushRecord.getTopicid();
+      List<PushRecord> list = getPushRecordByTopic(topicid, minLspri, maxLspri, isImg, null, null,
+          Integer.MAX_VALUE);
+      PushRecord lastOne = null;
+      for (PushRecord one : list) {
+        if (one.getIndexid().equals(indexid)) {
+          break;
+        }
+        lastOne = one;
+      }
+      return lastOne;
+    }
+  }
+
+  /**
+   * 根据推送记录ID，获取下一推送记录
+   * @param indexid  推送记录ID
+   * @param minLspri 权重最小值0-100
+   * @param maxLspri 权重最大值0-100
+   * @param isImg 是否图片，可以为null
+   * @return
+   */
+  public PushRecord getLastPushRecord(String indexid, int minLspri, int maxLspri, Boolean isImg) {
+    PushRecord pushRecord = pushRecordDAO.queryPushRecordById(indexid);
+    if (pushRecord == null) {
+      return null;
+    } else {
+      String topicid = pushRecord.getTopicid();
+      List<PushRecord> list = getPushRecordByTopic(topicid, minLspri, maxLspri, isImg, null, null,
+          Integer.MAX_VALUE);
+      boolean found = false;
+      for (PushRecord one : list) {
+        if (found) {
+          return one;
+        }
+        if (one.getIndexid().equals(indexid)) {
+          found = true;
+        }
+
+      }
+      return null;
+    }
+  }
+
 }

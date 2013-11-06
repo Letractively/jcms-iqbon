@@ -120,7 +120,12 @@ public class ModelService {
     if (logNumber <= 0) {
       logger.error("插入模板日志失败");
     }
-    return modelDAO.updateModel(model);
+    int updateNum = modelDAO.updateModel(model);
+    if (updateNum <= 0) {
+      logger.error("修改文章失败");
+      return updateNum;
+    }
+    return modelDAO.updateModelRefresh(model);
   }
 
   /**
@@ -145,6 +150,20 @@ public class ModelService {
       modelDAO.updateModelRefresh(model);
     }
     return delNum;
+  }
+
+  /**
+   * 批量删除模板
+   * @param modelNames
+   * @param userName
+   * @return
+   */
+  public int deleteModels(List<String> modelNames, String userName) {
+    int num = 0;
+    for (String modelName : modelNames) {
+      num += deleteModel(modelName, userName);
+    }
+    return num;
   }
 
   /**

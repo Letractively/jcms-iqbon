@@ -30,4 +30,11 @@ public class ErrorModelAndView extends ModelAndView {
   public void setReddirectUrl(String url) {
     this.addObject("redirect", url);
   }
+
+  /**
+   * 设为没登录错误
+   */
+  public void setAnonymousErrorInfo() {
+    this.setErrorInfo("你还没登录或者登录超时了");
+  }
 }

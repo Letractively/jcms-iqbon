@@ -11,15 +11,25 @@ import org.apache.velocity.app.Velocity;
 import org.apache.velocity.exception.MethodInvocationException;
 import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.exception.ResourceNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.iqbon.jcms.dao.business.TopicDAO;
 import com.iqbon.jcms.domain.Doc;
+import com.iqbon.jcms.domain.PushRecord;
+import com.iqbon.jcms.domain.Topic;
 import com.iqbon.jcms.util.JCMSVelocityContext;
+import com.iqbon.jcms.util.VelocityTool;
 
 @Service
 public class VelocityService {
 
   private static final Logger logger = Logger.getLogger(VelocityService.class);
+  @Autowired
+  private VelocityTool tool;
+
+  @Autowired
+  private TopicDAO topicDao;
 
   /**
    * 构建器，从veloctiy.properties读入配置，初始化Velocity引擎
@@ -56,6 +66,7 @@ public class VelocityService {
     }
     StringWriter writer = new StringWriter();
     JCMSVelocityContext context = JCMSVelocityContext.getInstance();
+    context.put("tool", tool);
     try {
       Velocity.evaluate(context, writer, "VMMessage", content);
       writer.flush();
@@ -63,10 +74,10 @@ public class VelocityService {
       writer.close();
       return result;
     } catch (MethodInvocationException e) {
-      logger.error("解析模板出错：" + e.getMessage());
+      logger.error("解析模板，方法调用出错：", e);
       throw new RuntimeException(e);
     } catch (IOException e) {
-      logger.error("解析模板出错：" + e.getMessage());
+      logger.error("解析模板，生成文件出错：", e);
       throw new RuntimeException(e);
     }
   }
@@ -79,14 +90,23 @@ public class VelocityService {
    * @throws ResourceNotFoundException
    * @throws ParseErrorException
    */
-  public String parseDoc(String content, Doc doc) throws ResourceNotFoundException,
+  public String parseDoc(String content, Doc doc, PushRecord pushRecord)
+      throws ResourceNotFoundException,
       ParseErrorException {
     if (StringUtils.isEmpty(content)) {
       throw new ParseErrorException("输入内容为空");
     }
     StringWriter writer = new StringWriter();
     JCMSVelocityContext context = JCMSVelocityContext.getInstance();
+    //插入对象
     context.put("doc", doc);
+    context.put("pushRecord", pushRecord);
+    context.put("tool", tool);
+    if (pushRecord != null && StringUtils.isNotBlank(pushRecord.getTopicid())) {
+      Topic topic = topicDao.queryTopicById(pushRecord.getTopicid());
+      context.put("topic", topic);
+    }
+
     try {
       Velocity.evaluate(context, writer, "VMMessage", content);
       writer.flush();

@@ -63,4 +63,5 @@ public class UrlRedirectAction {
     errorMav.setViewName(KeyConstant.ERROR_PAGE);
     return errorMav;
   }
+
 }

@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import com.iqbon.jcms.dao.system.DocLogDAO;
 import com.iqbon.jcms.domain.Doc;
 import com.iqbon.jcms.domain.DocLog;
 import com.iqbon.jcms.domain.Model;
+import com.iqbon.jcms.domain.PushRecord;
 import com.iqbon.jcms.util.JCMSConstant;
 import com.iqbon.jcms.util.JCMSProperties;
 import com.iqbon.jcms.util.NotFoundException;
@@ -111,30 +113,42 @@ public class DocService {
 
   /**
    * 发布文章
-   * @param docid
+   * @param docid 不能为空
+   * @param indexid  可以为空
    * @return
    * @throws IOException
-   * @throws NotFoundException 
+   * @throws NotFoundException
    */
-  public String publishDoc(String docid) throws IOException, NotFoundException {
+  public String publishDoc(String docid, String indexid) throws IOException, NotFoundException {
     Doc doc = docDAO.queryDocById(docid);
     if(doc==null){
       logger.error("文章" + docid + "不存在");
       return null;
     }
+
+    PushRecord pushRecord = new PushRecord();
+    if (StringUtils.isNotBlank(indexid)) {
+      pushRecord = pushRecordDAO.queryPushRecordById(indexid);
+    }
+
     String modelName = doc.getModelName();
     Model model = modelService.getModelInfoByModelName(modelName);
     if (model == null) {
       logger.error("文章模板" + modelName + "不存在");
       return null;
     }
-    String docContent = velocityService.parseDoc(model.getContent(), doc);
+    String docContent = velocityService.parseDoc(model.getContent(), doc, pushRecord);
     String encoding = jcmsProperties.getOutFileCoding();
     File file = JCMSConstant.createDocOutputFile(doc.getUrl());
     if (file == null) {
       throw new IOException("获取模板uri出错");
     }
     FileUtils.write(file, docContent, encoding);
+
+    //如果文章不是发布状态，设置文章状态
+    setDocStatus(docid, Doc.docStatus.publish);
+
+    //写日志
     DocLog docLog = new DocLog();
     docLog.setContent(DocLog.DOC_PUBLISH_COMMON);
     docLog.setTime(new Date());
@@ -151,4 +165,14 @@ public class DocService {
     return docLogDAO.queryDocLogByDocid(docid);
   }
 
+  /**
+   * 更新文章的状态
+   * @param status
+   */
+  public void setDocStatus(String docid, Doc.docStatus status) {
+    Doc doc = new Doc();
+    doc.setDocid(docid);
+    doc.setStatus(status.ordinal());
+    docDAO.updateDocStatus(doc);
+  }
 }

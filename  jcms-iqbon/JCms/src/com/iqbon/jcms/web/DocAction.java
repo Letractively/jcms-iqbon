@@ -126,6 +126,7 @@ public class DocAction extends JCMSAction {
     int number = docService.addDoc(doc);
     if (number > 0) {//增加推送记录
       PushRecord pushRecord = new PushRecord();
+      pushRecord.setIndexid(JCMSConstant.createPushRecordId());
       pushRecord.setDocid(docid);
       pushRecord.setLspri(PushRecord.DEFAULT_LSPRI);
       pushRecord.setModifyUser(user.getUserName());
@@ -137,7 +138,7 @@ public class DocAction extends JCMSAction {
       if (number > 0) {
         if (status == Doc.docStatus.publish.ordinal()) {//发布文章
           try {
-            docService.publishDoc(docid);
+            docService.publishDoc(docid, null);
           } catch (IOException e) {
             logger.error("发布文章失败", e);
             return getErrorUrl("发布文章失败");
@@ -204,7 +205,7 @@ public class DocAction extends JCMSAction {
     if (number > 0) {
       if (status == Doc.docStatus.publish.ordinal()) {//发布文章
         try {
-          docService.publishDoc(docid);
+          docService.publishDoc(docid, null);
         } catch (IOException e) {
           logger.error("发布文章失败", e);
           return getErrorUrl("发布文章失败");
