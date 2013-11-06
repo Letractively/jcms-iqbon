@@ -78,13 +78,13 @@ public class PushRecordDAOTest extends TestCase {
 
   public void testUpdatePushRecord() {
     pushRecord.setTitle("更新标题");
-    pushRecord.setIndexid(6);
+    pushRecord.setIndexid("6");
     int num = pushRecordDAO.updatePushRecord(pushRecord);
     logger.info(num);
   }
 
   public void testQueryPushRecordById() {
-    PushRecord pushRecord = pushRecordDAO.queryPushRecordById(7);
+    PushRecord pushRecord = pushRecordDAO.queryPushRecordById("7");
     logger.info(ToStringBuilder.reflectionToString(pushRecord));
   }
 

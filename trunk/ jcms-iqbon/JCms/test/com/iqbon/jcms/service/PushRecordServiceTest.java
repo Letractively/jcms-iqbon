@@ -46,6 +46,16 @@ public class PushRecordServiceTest extends TestCase {
     }
   }
 
+  public void testGetLastPushRecord() {
+    PushRecord pushRecord = pushRecordService.getLastPushRecord("7", 60, 60, null);
+    logger.info(ToStringBuilder.reflectionToString(pushRecord));
+  }
+
+  public void testGetNextRecord() {
+    PushRecord pushRecord = pushRecordService.getNextPushRecord("7", 60, 60, null);
+    logger.info(ToStringBuilder.reflectionToString(pushRecord));
+  }
+
   public void testAddPushRecord() {
     //    PushRecord pushRecord = new PushRecord();
     //

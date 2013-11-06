@@ -43,7 +43,7 @@ public class CodeServiceTest extends TestCase {
   }
   
   public void testDeleteCode() {
-    int number = codeService.deleteCode(code.getGroupName(), code.getKey(), code.getParentKey());
+    int number = codeService.deleteCode(code.getGroupName(), code.getKey());
     logger.info(number);
   }
 
