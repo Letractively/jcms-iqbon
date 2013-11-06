@@ -19,6 +19,8 @@ public class JCMSConstant {
   
   private static JCMSProperties propertiy = JCMSProperties.getInstance();
 
+  private static String MODEL_FOLDER = "/m/";
+
   /**
    * 生成一个topicID
    * @return
@@ -27,6 +29,17 @@ public class JCMSConstant {
     Date date = new Date();
     String dateStr = DateFormatUtils.format(date, "yyMMddHHmmssssss");
     String random = RandomStringUtils.randomAlphanumeric(2);
+    return dateStr + random;
+  }
+
+  /**
+   * 生成一个pushRecordId
+   * @return
+   */
+  public static String createPushRecordId() {
+    Date date = new Date();
+    String dateStr = DateFormatUtils.format(date, "yyMMddHHmmssss");
+    String random = RandomStringUtils.randomAlphanumeric(4);
     return dateStr + random;
   }
 
@@ -51,10 +64,23 @@ public class JCMSConstant {
     int month = calendar.get(Calendar.MONTH) + 1;
     int day = calendar.get(Calendar.DATE);
     StringBuffer sb = new StringBuffer();
-    return sb.append(propertiy.getHost()).append("/m/").append(year).append("/").append(month)
+    return sb.append(propertiy.getHost()).append(MODEL_FOLDER).append(year).append("/")
+        .append(month)
         .append("/").append(day).append("/").append(modelName).append(suffix).toString();
   }
   
+  /**
+   * 重新更新模板的URL地址
+   * @param url
+   * @return
+   */
+  public static String refreshModelUrl(String url, String suffix) {
+    StringBuffer sb = new StringBuffer();
+    sb.append(propertiy.getHost()).append(MODEL_FOLDER)
+        .append(url.split(MODEL_FOLDER)[1].split("\\.")[0]).append(suffix);
+    return sb.toString();
+  }
+
   /**
    * 生成文章的URL
    * @param docid

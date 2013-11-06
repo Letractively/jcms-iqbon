@@ -24,4 +24,7 @@
 <property name="configLocation" value="classpath:quartz.properties"/>
 </bean> 
 
+<bean name="velocityTool" class="com.iqbon.jcms.util.VelocityTool">
+</bean>
+
 </beans>

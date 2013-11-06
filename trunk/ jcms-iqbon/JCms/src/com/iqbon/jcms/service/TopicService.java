@@ -50,12 +50,13 @@ public class TopicService {
    * @param user
    * @return 生成的栏目ID
    */
-  public String addTopic(String parentTopicid, String topicName, String user) throws Exception {
+  public String addTopic(String parentTopicid, String topicName, String topicNav, String user)
+      throws Exception {
     String parentTree = "";
     if (!StringUtils.isEmpty(parentTopicid)) {
       Topic parentTopic = topicDAO.queryTopicById(parentTopicid);
       if (parentTopic == null) {
-        logger.error(parentTopicid + "增加子栏目，" + parentTopicid + "不存在");
+        logger.error(parentTopicid + "增加子栏目，父栏目" + parentTopicid + "不存在");
         throw new Exception(parentTopicid + "栏目不存在");
       }
       parentTree = parentTopic.getTopicTree();
@@ -68,6 +69,7 @@ public class TopicService {
     topic.setModifyUser(user);
     topic.setTopicName(topicName);
     topic.setParentTopic(parentTopicid);
+    topic.setTopicNav(topicNav);
     int num = topicDAO.insertTopic(topic);
     if (num == 0) {
       throw new Exception(parentTopicid + "增加子栏目失败");
@@ -98,11 +100,12 @@ public class TopicService {
    * @param topicid
    * @return
    */
-  public int modifyTopic(String topicName, String topicid, String user) {
+  public int modifyTopic(String topicName, String topicid, String topicNav, String user) {
     Topic topic = new Topic();
     topic.setTopicId(topicid);
     topic.setTopicName(topicName);
     topic.setModifyUser(user);
+    topic.setTopicNav(topicNav);
     return topicDAO.updateTopic(topic);
   }
 

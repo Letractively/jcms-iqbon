@@ -103,7 +103,7 @@ public class ModelDAO {
    */
   public int updateModel(Model model) {
     String sql = "update bu_model set content=:content,last_modify=:lastModify,modify_user=:modifyUser,title=:title,keyword=:keyword,extname=:extname"
-        + ",status=:status where model_name=:modelName";
+        + ",status=:status,url =:url where model_name=:modelName";
     SqlParameterSource paramMap = new BeanPropertySqlParameterSource(model);
     return namedParameterJdbcTemplate.update(sql, paramMap);
   }

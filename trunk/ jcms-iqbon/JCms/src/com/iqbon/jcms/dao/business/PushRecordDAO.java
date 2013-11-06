@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -52,6 +53,45 @@ public class PushRecordDAO {
     return namedParameterJdbcTemplate.query(sql, paramMap, new PushRecordMapper());
   }
 
+  /**
+   * 获取指定栏目的推送列表
+   * @param topicid 栏目ID
+   * @param minLspri 最小权重 默认为0
+   * @param maxLspri 最大权重 默认为100
+   * @param isImg 是否有图片
+   * @param startTime 时间范围，最后修改时间在startTime之后，可以为空
+   * @param endTime 时间范围，最后修改时间在startTime之前，可以为空
+   * @param limit 获取多少条记录
+   * @return
+   */
+  public List<PushRecord> queryPushRecordByTopic(String topicid, int minLspri, int maxLspri,
+      Boolean isImg, String startTime, String endTime, int limit) {
+    Map<String, Object> map = new HashMap<String, Object>();
+    map.put("topicid", topicid);
+    map.put("minLspri", minLspri);
+    map.put("maxLspri", maxLspri);
+    map.put("limit", limit);
+    String sql = "select indexid,docid,modelname,title,lspri,url,sub_title,add_date,last_modify,modify_user,topicid,type,img "
+        + "from bu_push_record where  topicid = :topicid ";
+    sql += " and lspri between :minLspri  and :maxLspri";
+    if (isImg != null) {
+      if (isImg.booleanValue()) {
+        sql += " and img is not null";
+      } else {
+        sql += " and img is null";
+      }
+    }
+    if (StringUtils.isNotEmpty(startTime)) {
+      sql += " and last_modify >= :startTime" ;
+      map.put("startTime", startTime);
+    }
+    if(StringUtils.isNotEmpty(endTime)){
+      sql += "and last_modify <= :endTime";
+      map.put("endTime", endTime);
+    }
+    sql += " order by add_date desc,lspri desc,last_modify desc limit :limit";
+    return namedParameterJdbcTemplate.query(sql, map, new PushRecordMapper());
+  }
 
   /**
    * 插入推送记录
@@ -108,7 +148,7 @@ public class PushRecordDAO {
    * @return
    */
   public int updatePushRecord(PushRecord pushRecord) {
-    String sql = "update bu_push_record set docid=:docid,modelname=:modelName,title=:title,"
+    String sql = "update bu_push_record set modelname=:modelName,title=:title,"
         + "lspri=:lspri,url=:url,sub_title=:subTitle,last_modify = now(),"
         + "modify_user=:modifyUser,topicid=:topicid,img=:img "
         + "where indexid=:indexid";
@@ -121,9 +161,9 @@ public class PushRecordDAO {
    * @param indexid
    * @return
    */
-  public PushRecord queryPushRecordById(int indexid) {
+  public PushRecord queryPushRecordById(String indexid) {
     String sql = "select * from bu_push_record where indexid=:indexid";
-    Map<String, Integer> map = new HashMap<String, Integer>(1);
+    Map<String, String> map = new HashMap<String, String>(1);
     map.put("indexid", indexid);
     return namedParameterJdbcTemplate.queryForObject(sql, map, new PushRecordMapper());
   }
@@ -181,5 +221,18 @@ public class PushRecordDAO {
     Map<String, String> map = new HashMap<String, String>(1);
     map.put("docid", docid);
     return namedParameterJdbcTemplate.update(sql, map);
+  }
+
+  /**
+   * 根据文章ID获取推送记录
+   * @param docid
+   * @return
+   */
+  public List<PushRecord> queryPushRecordByDocid(String docid) {
+    Map<String, Object> map = new HashMap<String, Object>();
+    map.put("docid", docid);
+    String sql = "select indexid,docid,modelname,title,lspri,url,sub_title,add_date,last_modify,modify_user,topicid,type,img "
+        + "from bu_push_record where  docid = :docid ";
+    return namedParameterJdbcTemplate.query(sql, map, new PushRecordMapper());
   }
 }

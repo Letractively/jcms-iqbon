@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -59,8 +60,10 @@ public class UserAction extends JCMSAction {
           session.removeAttribute(KeyConstant.SESSION_KEY_AUTH_CODE); 
           session.setAttribute(KeyConstant.SESSION_KEY_USER, user);
           view.setViewName("redirect:/admin/common/index.do");
-        logger.info("user:" + user.getUserName() + " login");
+        logger.info("user:" + user.getUserName() + " 登录");
       } else {//验证码错误
+        errorMav.setErrorInfo("验证码错误");
+        logger.warn("user:" + user.getUserName() + "验证码错误");
         return errorMav;
         }
       }      
@@ -161,5 +164,23 @@ public class UserAction extends JCMSAction {
     view.addObject("userName", userName);
     view.setViewName(KeyConstant.ADMIN_JSP_PATH + "updatePassword");
     return view;
+  }
+
+  /**
+   * 退出登录
+   * @param username
+   * @return
+   */
+  @RequestMapping("/logout.do")
+  public String logout(@RequestParam("userName")
+  String username, HttpServletRequest request) {
+    HttpSession session = request.getSession();
+    String url = "redirect:/login.htm";
+    if (StringUtils.isEmpty(username) || session.getAttribute(KeyConstant.SESSION_KEY_USER) == null) {
+      return url;
+    } else {
+      session.removeAttribute(KeyConstant.SESSION_KEY_USER);
+      return url;
+    }
   }
 }

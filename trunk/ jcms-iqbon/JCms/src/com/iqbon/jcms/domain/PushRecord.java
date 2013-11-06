@@ -19,7 +19,7 @@ public class PushRecord extends CMSDomain {
     emptyDoc, doc, model
   };
 
-  private int indexid;
+  private String indexid;
    
   private String docid;
    
@@ -45,11 +45,11 @@ public class PushRecord extends CMSDomain {
    
    private int type;
 
-  public int getIndexid() {
+  public String getIndexid() {
     return indexid;
   }
 
-  public void setIndexid(int indexid) {
+  public void setIndexid(String indexid) {
     this.indexid = indexid;
   }
 

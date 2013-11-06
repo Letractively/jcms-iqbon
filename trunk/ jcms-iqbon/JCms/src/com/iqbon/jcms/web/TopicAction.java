@@ -1,5 +1,6 @@
 package com.iqbon.jcms.web;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -22,10 +23,13 @@ import com.iqbon.jcms.domain.Model;
 import com.iqbon.jcms.domain.PushRecord;
 import com.iqbon.jcms.domain.Topic;
 import com.iqbon.jcms.domain.User;
+import com.iqbon.jcms.service.DocService;
 import com.iqbon.jcms.service.ModelService;
 import com.iqbon.jcms.service.PushRecordService;
 import com.iqbon.jcms.service.TopicService;
 import com.iqbon.jcms.util.KeyConstant;
+import com.iqbon.jcms.util.NotFoundException;
+import com.iqbon.jcms.web.api.APIConstant;
 import com.iqbon.jcms.web.util.JCMSAction;
 import com.iqbon.jcms.web.util.Page;
 
@@ -67,6 +71,9 @@ public class TopicAction extends JCMSAction {
 
   @Autowired
   private ModelService modelService;
+
+  @Autowired
+  private DocService docService;
 
   /**
      * 顶级栏目JSON数据
@@ -146,7 +153,8 @@ public class TopicAction extends JCMSAction {
   @RequestMapping(value = "/addSubTopic.do", method = RequestMethod.POST)
   public ModelAndView addSubTopic(@RequestParam("parentTopicid")
   String parentTopicid, @RequestParam("topicName")
-  String topicName, @RequestParam(value = "pageNum", required = false)
+  String topicName, @RequestParam("topicNav")
+  String topicNav, @RequestParam(value = "pageNum", required = false)
   int pageNum, @RequestParam(value = "type", required = false)
   int type, HttpSession session) {
     User user = getUserFromSession(session);
@@ -154,7 +162,7 @@ public class TopicAction extends JCMSAction {
       return errorMav;
     }
     try {
-      topicService.addTopic(parentTopicid, topicName, user.getUserName());
+      topicService.addTopic(parentTopicid, topicName, topicNav, user.getUserName());
       return this.topicPage(parentTopicid, pageNum, type);
     } catch (Exception e) {
       logger.error("新建子栏目失败，parentTopicid=" + parentTopicid + " topicName=" + topicName + " user="
@@ -215,14 +223,16 @@ public class TopicAction extends JCMSAction {
   @RequestMapping(value = "/modifyTopic.do")
   public ModelAndView modifyTopic(@RequestParam("topicid")
   String topicid, @RequestParam("topicName")
-  String topicName, @RequestParam(value = "pageNum", required = false)
+  String topicName, @RequestParam("topicNav")
+  String topicNav, @RequestParam(value = "pageNum", required = false)
   int pageNum, @RequestParam(value = "type", required = false)
   int type, HttpSession session) {
     User user = getUserFromSession(session);
     if (user == null) {
+      errorMav.setAnonymousErrorInfo();
       return errorMav;
     }
-    int number = topicService.modifyTopic(topicName, topicid, user.getUserName());
+    int number = topicService.modifyTopic(topicName, topicid, topicNav, user.getUserName());
     if (number > 0) {
       return this.topicPage(topicid, pageNum, type);
     }
@@ -271,7 +281,7 @@ public class TopicAction extends JCMSAction {
    */
   @RequestMapping(value = "/updateLspri.do")
   public ModelAndView updateLspri(@RequestParam("indexid")
-  int indexid, @RequestParam("lspri")
+  String indexid, @RequestParam("lspri")
   int lspri, @RequestParam("topicid")
   String topicid, @RequestParam(value = "pageNum", required = false)
   int pageNum, @RequestParam(value = "type", required = false)
@@ -295,10 +305,52 @@ public class TopicAction extends JCMSAction {
   @RequestMapping(value = "/getPushRecord.do")
   @ResponseBody
   public PushRecord getPushRecord(@RequestParam("indexid")
-  int indexid) {
+  String indexid) {
     return pushRecordService.getPushRecordById(indexid);
   }
  
+  /**
+   * 根据ID重新刷页面
+   * @param indexid
+   * @return
+   */
+  @RequestMapping(value = "/republicPushRecord.do")
+  @ResponseBody
+  public Map<String, String> republicPushRecord(@RequestParam("indexid")
+  String indexid) {
+    Map<String, String> result = new HashMap<String, String>();
+    PushRecord pushRecord = pushRecordService.getPushRecordById(indexid);
+    try {
+    if (pushRecord.getType() == PushRecord.PUSH_RECORD_TYPE.doc.ordinal()) {
+        docService.publishDoc(pushRecord.getDocid(), String.valueOf(indexid));
+        result.put(APIConstant.K_RESULT, APIConstant.V_SUCCESS);
+      } else if (pushRecord.getType() == PushRecord.PUSH_RECORD_TYPE.model.ordinal()) {
+        Model model = modelService.getModelInfoByModelName(pushRecord.getModelName());
+        modelService.publishModelContent(model);
+        result.put(APIConstant.K_RESULT, APIConstant.V_SUCCESS);
+      } else {
+        result.put(APIConstant.K_RESULT, APIConstant.V_FAIL);
+        result.put(APIConstant.K_MESSAGE, "该类型推送记录无法刷新");
+      }
+    } catch (IOException e) {
+      logger.error("刷新文章页面IO出错", e);
+      result.put(APIConstant.K_RESULT, APIConstant.V_FAIL);
+      result.put(APIConstant.K_MESSAGE, e.getMessage());
+      return result;
+    } catch (NotFoundException e) {
+      logger.error("刷新文章页面NotFoundException", e);
+      result.put(APIConstant.K_RESULT, APIConstant.V_FAIL);
+      result.put(APIConstant.K_MESSAGE, e.getMessage());
+      return result;
+    } catch (Exception e) {
+      logger.error("刷新文章页面出错", e);
+      result.put(APIConstant.K_RESULT, APIConstant.V_FAIL);
+      result.put(APIConstant.K_MESSAGE, e.getMessage());
+      return result;
+    }
+    return result;
+  }
+
   /**
    * 修改推送记录
    * @param indexid
@@ -315,7 +367,7 @@ public class TopicAction extends JCMSAction {
    */
   @RequestMapping(value = "/modifyPushRecord.do")
   public ModelAndView modifyPushRecord(@RequestParam("indexid")
-  int indexid, @RequestParam("title")
+  String indexid, @RequestParam("title")
   String title, @RequestParam(value = "subTitle", required = false)
   String subTitle, @RequestParam(value = "img", required = false)
   String img, @RequestParam("url")
@@ -364,6 +416,33 @@ public class TopicAction extends JCMSAction {
       return errorMav;
     }
     int number = pushRecordService.deletePushRecords(Arrays.asList(indexid));
+    if (number > 0) {
+      return this.topicPage(topicid, pageNum, type);
+    }
+    return errorMav;
+  }
+
+  /**
+   * 批量删除模板
+   * @param modelNames
+   * @param topicid
+   * @param pageNum
+   * @param type
+   * @param session
+   * @return
+   */
+  @RequestMapping(value = "/deleteModels.do")
+  public ModelAndView deleteModels(@RequestParam("modelSelect")
+  String[] modelNames, @RequestParam("topicid")
+  String topicid, @RequestParam(value = "pageNum", required = false)
+  int pageNum, @RequestParam(value = "type", required = false)
+  int type, HttpSession session) {
+    User user = getUserFromSession(session);
+    if (user == null) {
+      errorMav.setAnonymousErrorInfo();
+      return errorMav;
+    }
+    int number = modelService.deleteModels(Arrays.asList(modelNames), user.getUserName());
     if (number > 0) {
       return this.topicPage(topicid, pageNum, type);
     }

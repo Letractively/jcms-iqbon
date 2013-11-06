@@ -50,8 +50,8 @@ public class TopicDAO {
    * @return
    */
   public int insertTopic(Topic topic) {
-    String sql = "insert into bu_topic(topicid,topic_name,last_modify,modify_user,topic_tree,parent_topic)"
-        + " values (:topicId,:topicName,now(),:modifyUser,:topicTree,:parentTopic)";
+    String sql = "insert into bu_topic(topicid,topic_name,last_modify,modify_user,topic_tree,parent_topic,topic_nav)"
+        + " values (:topicId,:topicName,now(),:modifyUser,:topicTree,:parentTopic,:topicNav)";
     SqlParameterSource paramMap = new BeanPropertySqlParameterSource(topic);
     return namedParameterJdbcTemplate.update(sql, paramMap);
   }
@@ -62,7 +62,7 @@ public class TopicDAO {
    * @return
    */
   public List<Topic> querySubTopicList(String topicId) {
-    String sql = "select * from bu_topic where parent_topic = :topicId  order by topic_name desc";
+    String sql = "select * from bu_topic where parent_topic = :topicId  order by topic_name";
     Map<String, String> map = new HashMap<String, String>();
     map.put("topicId", topicId);
     return namedParameterJdbcTemplate.query(sql, map, new TopicMapper());
@@ -115,7 +115,7 @@ public class TopicDAO {
    * @return
    */
   public int updateTopic(Topic topic) {
-    String sql = "update bu_topic set topic_name = :topicName, modify_user=:modifyUser,last_modify = now() "
+    String sql = "update bu_topic set topic_name = :topicName, topic_nav = :topicNav, modify_user=:modifyUser,last_modify = now() "
         + "where topicid=:topicId";
     SqlParameterSource paramMap = new BeanPropertySqlParameterSource(topic);
     return namedParameterJdbcTemplate.update(sql, paramMap);

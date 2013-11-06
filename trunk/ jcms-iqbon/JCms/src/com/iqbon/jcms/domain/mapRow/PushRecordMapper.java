@@ -12,7 +12,7 @@ public class PushRecordMapper implements RowMapper<PushRecord> {
   @Override
   public PushRecord mapRow(ResultSet rs, int rowNum) throws SQLException {
     PushRecord pushRecord = new PushRecord();
-    pushRecord.setIndexid(rs.getInt("indexid"));
+    pushRecord.setIndexid(rs.getString("indexid"));
     pushRecord.setDocid(rs.getString("docid"));
     pushRecord.setModelName(rs.getString("modelname"));
     pushRecord.setTitle(rs.getString("title"));

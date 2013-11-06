@@ -31,8 +31,8 @@ public class CodeService {
    * @param parentKey
    * @return
    */
-  public int deleteCode(String groupName, String key, String parentKey) {
-      return codeDAO.deleteCode(groupName, key, parentKey);
+  public int deleteCode(String groupName, String key) {
+    return codeDAO.deleteCode(groupName, key);
   }
 
   /**
@@ -84,4 +84,15 @@ public class CodeService {
   public Code getCodeGroupInfo(String groupName){
     return codeDAO.queryGroupInfo(groupName);
   }
+
+  /**
+   * 判断同一组中是否已经存在相同的系统码
+   * @param groupName
+   * @param key
+   * @return
+   */
+  public boolean isCodeExist(String groupName, String key) {
+    return codeDAO.queryCodeNumByGroupAndKey(groupName, key) != 0;
+  }
+
 }

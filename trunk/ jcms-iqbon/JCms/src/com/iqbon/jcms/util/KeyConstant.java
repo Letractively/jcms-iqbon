@@ -61,5 +61,5 @@ public class KeyConstant {
    * 模板过期日期系统码组名
    */
   public static final String CODE_MODEL_TIMEOUT = "modelTimeout";
-    
+
 }

@@ -23,6 +23,7 @@ public class TopicMapper implements RowMapper<Topic> {
     topic.setLastModify(rs.getString("last_modify"));
     topic.setModifyUser(rs.getString("modify_user"));
     topic.setParentTopic(rs.getString("parent_topic"));
+    topic.setTopicNav(rs.getString("topic_nav"));
     return topic;
   }
 
