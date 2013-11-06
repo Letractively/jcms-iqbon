@@ -34,7 +34,7 @@
 <c:if test="${type==1 }">
 	<div class="btn-group">
 		<button class="btn" onclick="window.location.href='/admin/model/addModifyModelPage.do?topicid=${topicid}&pageNum=${pageNum }&type=${type }&modelType=0'" title="新建模板">新建</button>
-		<button class="btn"  title="删除模板">删除</button>
+		<button class="btn" onclick="deleteModels();" title="删除模板">删除</button>
 	</div>
 </c:if>
     <div class="btn-group">
@@ -66,6 +66,7 @@
  		</tr>
  	</thead>
  	<tbody id="listFrom">
+ 	<!-- 先显示文章列表 -->
  	<c:forEach var="topic" items="${subTopicList}" varStatus="topicStatus">
  		<tr>
  			<td><input type="checkbox" name="topicSelect" value="${topic.topicId }" id="topic_${topicStatus.index }"/></td>
@@ -77,6 +78,7 @@
  			<td><a href="#">${topic.modifyUser}</a></td>
  		</tr>
  	</c:forEach>
+ 	<!-- 文章列表 -->
  	<c:if test="${type==0 }">
 	 	<c:forEach var="pushRecord" items="${pushRecordList}" varStatus="pushRecordStatus">
 	 		<tr>
@@ -87,6 +89,9 @@
 	 					<img src="/images/blank_file.gif"/>&nbsp;&nbsp;${pushRecord.title}
 	 				</a>&nbsp;&nbsp;<a onclick="modifyPushRecord('${pushRecord.indexid}')" href="#" title="修改属性" class="btn-small">
 	 					<img src="/images/edit.gif"/>
+	 				</a>
+	 				</a>&nbsp;&nbsp;<a onclick="modifyPushRecord('${pushRecord.indexid}')" href="#" title="修改属性" class="btn-small">
+	 					<img src="/images/refresh.png"/>
 	 				</a>
 	 			</c:if>
 	 			<c:if test="${pushRecord.type==1 }">
@@ -99,6 +104,9 @@
 	 				</a>&nbsp;&nbsp;<a onclick="modifyPushRecord('${pushRecord.indexid}')" href="#" title="修改属性" class="btn-small">
 	 					<img src="/images/edit.gif"/>
 	 				</a>
+	 				<a onclick="repushRecord('${pushRecord.indexid}')" href="#" title="刷新页面" class="btn-small">
+	 					<img src="/images/refresh.png"/>
+	 				</a>
 	 			</c:if>	
 	 			</td>
 	 			<td>${pushRecord.url }</td>
@@ -109,11 +117,12 @@
 	 		</tr>
 	 	</c:forEach>
  	</c:if>
+ 	<!-- 模板列表 -->
  	<c:if test="${type==1 }">
  		<c:forEach var="model" items="${modelList}" varStatus="modelStatus">
 	 		<tr>
 	 			<td><input type="checkbox" name="modelSelect" value="${model.modelName }" id="model_${modelStatus.index }"/></td>
-	 			<td><a href="/admin/model/addModifyModelPage.do?modelName=${model.modelName }&topicid=${topicid}&pageNum=${pageNum }&type=${type }&modelType=0"><img src="/images/model.gif"/>&nbsp;&nbsp;${model.title}</a>&nbsp;&nbsp;<a onclick="modifyPushRecord('${pushRecord.indexid}')" href="#" title="修改属性" class="btn-small"><img src="/images/edit.gif"/></a></td>
+	 			<td><a href="/admin/model/addModifyModelPage.do?modelName=${model.modelName }&topicid=${topicid}&pageNum=${pageNum }&type=${type }&modelType=0"><img src="/images/model.gif"/>&nbsp;&nbsp;${model.title}</a>&nbsp;&nbsp;</td>
 	 			<td>${model.url }</td>
 	 			<td>${model.lastModify}</td>
 	 			<td>${model.addTime}</td>
@@ -332,6 +341,19 @@
 		$('#modifyPushRecord').modal('show');
 	}
 	
+	function repushRecord(indexid){
+		$.post("republicPushRecord.do",{
+			'indexid':indexid},
+			function(result){
+				if(result.result=='success'){
+					alert("刷新成功");
+				}else{
+					alert(result.message);
+				}
+				
+			});
+	}
+	
 	function checkModifyPushRecord(){
 		if($('#modifyPushRecordTitle').val()==''){
 			$('#modifyPushRecordTitleError').html('标题不能为空');
@@ -358,6 +380,17 @@
 				$('#dolot').submit();
 			}else{
 				alert('请选择一篇文章');
+			}
+		}
+	}
+	
+	function deleteModels(){
+		if(confirm('确认删除所选模板')){
+			if($('input[name="modelSelect"]:checked').length>0){
+				$('#dolot').attr('action','/admin/topic/deleteModels.do');
+				$('#dolot').submit();
+			}else{
+				alert('请选择一个模板');
 			}
 		}
 	}

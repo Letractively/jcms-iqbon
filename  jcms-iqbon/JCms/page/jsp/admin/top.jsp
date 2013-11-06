@@ -18,12 +18,13 @@
 	          <a href="#"><i class="icon-user"></i> ${user.userName }</a>
 		</li>
 	    <li class="active">
-	    <a href="#">首页</a>
+	    <a href="/admin/main.do" target="mainFrame">首页</a>
 	    </li>
 	    <li>
 	    <a href="/admin/common/leftUserSetting.do?userName=${user.userName }" target="left">我的信息</a>
 	   	</li>
 	    <li><a href="#">系统设置</a></li>
+	    <li><a href="/admin/user/logout.do?userName=${user.userName }" target="_top" >退出</a></li>
     	</ul>
 	</span>
     

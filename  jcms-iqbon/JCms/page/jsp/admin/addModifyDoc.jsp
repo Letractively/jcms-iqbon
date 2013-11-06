@@ -22,10 +22,10 @@
     	<a href='/admin/topic/topicPage.do?pageNum=${pageNum }&type=0&topicid=${topicid}' title="返回目录">返回目录</a>
     </div>
 	<div>
-		<label>标题:</label><input value="${doc.title }" type="text" class="span10" name="title">
+		<label>标题:</label><input value="${doc.title }" type="text" class="span9" name="title">
 	</div>
 	<div>
-		<label>摘要:</label><textarea rows="" cols="" class="span10" name="digest">${doc.digest }</textarea>
+		<label>摘要:</label><textarea rows="" cols="" class="span9" name="digest">${doc.digest }</textarea>
 	</div>
 	<div>
 		<label>正文</label>
@@ -35,7 +35,7 @@
 		<label>关键字:</label><input value="${doc.keyword }" type="text" name="keyword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 	</div>
 	<div class="form-inline ">
-	<label>编辑:</label><input type="text" name="reporter" value="${user.nickName }">
+	<label>编辑:</label><input type="text" name="reporter" <c:if test="${doc eq null }"> value="${user.nickName }"</c:if><c:if test="${!(doc eq null) }"> value="${doc.reporter }"</c:if>>
 	<input type="hidden" name="topicid" value="${topicid }">
 	<input type="hidden" value="${pageNum }" name="pageNum">
 	<input type="hidden" value="${type }" name="type">
@@ -50,7 +50,7 @@
 		<label>文章模板:</label>
 		<select name="modelName" class="span2">
 			<c:forEach items="${docModelList }" var="model">
-				<option value="${model.modelName }">${model.title }</option>
+				<option <c:if test="${doc.modelName==model.modelName }">selected="selected"</c:if>  value="${model.modelName }">${model.title }</option>
 			</c:forEach>
 		</select>
 	</div>
