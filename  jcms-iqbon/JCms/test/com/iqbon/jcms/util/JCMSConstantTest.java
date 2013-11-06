@@ -28,4 +28,9 @@ public class JCMSConstantTest extends TestCase {
     logger.info(url);
   }
 
+  public void testRefreshModelUrl() {
+    String url = JCMSConstant.refreshModelUrl(
+        "http://localhost:8081/m/2013/5/29/recommend_doc.css", ".html");
+    logger.info(url);
+  }
 }

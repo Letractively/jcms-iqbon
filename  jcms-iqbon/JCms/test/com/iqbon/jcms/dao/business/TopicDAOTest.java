@@ -24,10 +24,10 @@ public class TopicDAOTest extends TestCase {
     topic = new Topic();
     String topicid = JCMSConstant.createTopicId();
     topic.setTopicId(topicid);
-    topic.setTopicName("测试栏目");
+    topic.setTopicName("主栏目");
     topic.setTopicTree(topicid+";");
     topic.setModifyUser("testuser");
-    topic.setTopicTree("");
+    //topic.setTopicTree("");
     super.setUp();
   }
 

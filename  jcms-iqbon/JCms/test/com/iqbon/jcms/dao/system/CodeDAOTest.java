@@ -21,7 +21,7 @@ public class CodeDAOTest extends TestCase {
     code = new Code();
     code.setGroupName("test");
     code.setKey("key");
-    code.setParentKey(null);
+    code.setParentKey("");
     code.setValue("value");
     codeDAO = (CodeDAO) BeanFactory.getBean("codeDAO");
   }
@@ -35,7 +35,7 @@ public class CodeDAOTest extends TestCase {
   }
 
   public void testDeleteCode() {
-    logger.info(codeDAO.deleteCode(code.getGroupName(), "key1", code.getKey()));
+    logger.info(codeDAO.deleteCode(code.getGroupName(), "key"));
   }
 
   public void testDeleteCodeByGroup() {
@@ -62,5 +62,11 @@ public class CodeDAOTest extends TestCase {
   public void testQueryGroupInfo() {
     Code codeGroup = codeDAO.queryGroupInfo(code.getGroupName());
     logger.info(ToStringBuilder.reflectionToString(codeGroup));
+  }
+
+  public void testQueryCodeNumByGroupAndKey() {
+    int number = codeDAO.queryCodeNumByGroupAndKey(code.getGroupName(), code.getKey());
+    logger.info(number);
+
   }
 }
