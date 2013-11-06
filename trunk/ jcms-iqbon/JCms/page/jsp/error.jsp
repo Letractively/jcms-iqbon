@@ -8,10 +8,8 @@
 <title>JCMS访问出错</title>
 </head>
 <body>
-出错啦！！
+<h1>出错啦！！</h1>
 <br/>
-<c:if test="${errorInfo=='' }">
-《${errorInfo }》
-</c:if>
+<h2>${errorInfo }，<a href="javascript:window.history.go(-1);">返回</a></h2>
 </body>
 </html>

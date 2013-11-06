@@ -112,7 +112,9 @@ function checkAddCode(){
 									$('#addCodeContent').empty();
 									$('#addCodeContent').append(perContent);
 								}else{
-									alert('添加失败');
+									alert('添加失败'+result.message);
+									$('#addCodeContent').empty();
+									$('#addCodeContent').append(perContent);
 								}
 							});
 }
@@ -139,7 +141,8 @@ function showSubCode(groupName,key,parentKey){
 				+'<span class="file">'
 				+'<a href="javaScript:showSecSubCode(\''+codeList[i].groupName+'\',\''+codeList[i].key+'\',\''+codeList[i].parentKey+'\');">'
 				+'key='+codeList[i].key+'&nbsp;&nbsp;value='+codeList[i].value
-				+'</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">删除</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onclick="showAddCode(\''+codeList[i].groupName+'\',\''+codeList[i].key+'\');$(\'#showSubCode\').modal(\'hide\');">添加</a></span></li>';
+				+'</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onclick="javaScript:deleteSubCode(\''+codeList[i].groupName+'\',\''+codeList[i].key+'\',\''+codeList[i].parentKey+'\')">删除</a>'
+				+'&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onclick="showAddCode(\''+codeList[i].groupName+'\',\''+codeList[i].key+'\');$(\'#showSubCode\').modal(\'hide\');">添加</a></span></li>';
 			}
 			content +='</ul>'
 			$('#showSubCodeContent').empty();
@@ -171,5 +174,17 @@ function showSecSubCode(groupName,key,parentKey){
 		});
 }
 
+function deleteSubCode(groupName,key,parentKey){
+	$.post("deleteSubCode.do",{
+		'groupName':groupName,
+		'codeKey':key},function(result){
+			if(result.result=='success'){
+				alert('删除成功');
+				$('#'+groupName+'_'+key+'_'+parentKey).empty();
+			}else{
+				alert('删除失败'+result.message);
+			}
+		});
+}
 </script>
 </html>
