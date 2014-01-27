@@ -54,7 +54,7 @@ public class TopicServiceTest extends TestCase {
     String user = "zlliang";
     
     try {
-      String topicid = topicService.addTopic(topic.getTopicId(), topicName, user);
+      String topicid = topicService.addTopic(topic.getTopicId(), topicName, null, user);
       logger.info(topicid);
     } catch (Exception e) {
       // TODO Auto-generated catch block
@@ -62,7 +62,7 @@ public class TopicServiceTest extends TestCase {
     }
     //测试增加根栏目
     try {
-      String topicid = topicService.addTopic(null, topicName, user);
+      String topicid = topicService.addTopic(null, topicName, null, user);
       logger.info(topicid);
     } catch (Exception e) {
       // TODO Auto-generated catch block
@@ -75,7 +75,7 @@ public class TopicServiceTest extends TestCase {
     String topicName = "测试子栏目";
     String user = "zlliang";
     try {
-      String topicid = topicService.addTopic(null, topicName, user);
+      String topicid = topicService.addTopic(null, topicName, null, user);
       int deletedNum = topicService.deleteTopic(topicid);
       logger.info("topicid:" + topicid);
       logger.info(deletedNum);
@@ -96,9 +96,9 @@ public class TopicServiceTest extends TestCase {
     String topicName = "测试修改栏目2";
     
     String topicid = topic.getTopicId();
-    int num = topicService.modifyTopic(topicName, topicid, topic.getModifyUser());
+    int num = topicService.modifyTopic(topicName, topicid, null, topic.getModifyUser());
     logger.info(num);
-    topicService.modifyTopic(topic.getTopicName(), topic.getTopicId(), topic.getModifyUser());
+    topicService.modifyTopic(topic.getTopicName(), topic.getTopicId(), null, topic.getModifyUser());
   }
 
 }
