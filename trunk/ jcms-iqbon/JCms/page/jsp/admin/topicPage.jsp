@@ -26,9 +26,11 @@
     	<li><a href="#" onclick="$('#addBlankDoc').modal('show');">发布空文章</a></li>
     </ul>
     <button class="btn" onclick="deletePushRecords();" title="删除推送记录">删除</button>
+    <button class="btn" onclick="fullDeletePushRecords();" title="完全删除推送记录">完全删除</button>
     <button class="btn" onclick="copyPushRecords()" title="复制文章或空文章">复制</button>
     <button class="btn" onclick="cutPushRecords()" title="剪切文章或空文章">剪切</button>
     <button class="btn" onclick="pastePushRecords()" title="粘贴文章或空文章">粘贴</button>
+    <button class="btn btn-success" onclick="republicPushRecords();" title="刷新文章">刷新</button>
     </div>
 </c:if>
 <c:if test="${type==1 }">
@@ -134,12 +136,13 @@
  	</tbody>
  </table>
  </form>
-<form class="well form-inline">
-	<a href="/admin/topic/topicPage.do?pageNum=1&type=${type }&topicid=${topicid}"><i class="icon-step-backward"></i></a><a><i class="icon-chevron-left"></i></a> 
-	第<input type="text" class="input-mini"  value="${pageNum }"/>页<button type="submit" class="btn">Go</button>
-	<a><i class="icon-chevron-right"></i></a><a href="/admin/topic/topicPage.do?pageNum=${totalPageNum }&type=${type }&topicid=${topicid}"><i class="icon-step-forward"></i></a> 
+	<a title="第一页" href="/admin/topic/topicPage.do?pageSize=${pageSize }&pageNum=1&type=${type }&topicid=${topicid}"><i class="icon-step-backward"></i></a>
+	<a title="上一页" href="/admin/topic/topicPage.do?pageSize=${pageSize }&pageNum=${prePageNum }&type=${type }&topicid=${topicid}"><i class="icon-chevron-left"></i></a> 
+	第<input id="goPageNum" onkeypress="if (event.keyCode==13){goPage();}" type="text" class="input-mini"  value="${pageNum }"/>页<button type="submit" onclick="goPage();" class="btn">Go</button><a href="#" id="goPage" style="display: none;"><span id="goPageContent">goPage</span></a>
+	<a title="下一页" href="/admin/topic/topicPage.do?pageSize=${pageSize }&pageNum=${nextPageNum }&type=${type }&topicid=${topicid}"><i class="icon-chevron-right"></i></a>
+	<a title="最后页" href="/admin/topic/topicPage.do?pageSize=${pageSize }&pageNum=${totalPageNum }&type=${type }&topicid=${topicid}"><i class="icon-step-forward"></i></a> 
 	共${totalPageNum }页
-</form>
+	每页<input id="goPageSize" onkeypress="if (event.keyCode==13){goPage();}" type="text" class="input-mini"  value="${pageSize }"/>条
 
 <div class="modal" id="addTopic" style="display: none">
  	<div class="modal-header">
@@ -148,6 +151,7 @@
  	<form id="addTopicForm" action="addSubTopic.do" method="post" onsubmit="return checkAddSubTopic();">
 	 	<div class="modal-body">
 	 		名称:<input onfocus="$('#topicNameError').html('');" name="topicName" id="addTopicName"><span id="topicNameError" class="help-inline" style="color: red;"></span>
+	 		<div>栏目导航:<input name="topicNav" id="addTopicNav"/></div>
 	 		<input type="hidden" name="parentTopicid" id="addParentTopicid" value="">
 	 		<input type="hidden" name="pageNum" value="${pageNum }">
 	 		<input type="hidden" name="type"  value="${type }">
@@ -166,6 +170,7 @@
  	<form id="modifyTopicForm" action="modifyTopic.do" method="post" onsubmit="return checkModifyTopic();">
 	 	<div class="modal-body">
 	 		名称:<input onfocus="$('#modifyTopicNameError').html('');" name="topicName" id="modifyTopicName"><span id="modifyTopicNameError" class="help-inline" style="color: red;"></span>
+	 		<div>栏目导航:<input name="topicNav" id="modifyTopicNav"> 同步到子栏目<input type="checkbox" name="toSubTopic"/></div>
 	 		<input type="hidden" name="topicid" id="modifyTopicid" value="${topicid}">
 	 		<input type="hidden" name="pageNum" value="${pageNum }">
 	 		<input type="hidden" name="type"  value="${type }">
@@ -239,12 +244,41 @@
 	 	</div>
  	</form>
  </div>
+ 
+  <div class="modal" id="republicProgress" style="display: none">
+	<div class="modal-header">
+ 		<h3>刷新文章</h3>
+ 	</div>
+	<div class="modal-body">
+	<div class="progress progress-striped active">
+    	<div class="bar" id="refreshProgress" style="width:0%;">刷新中...</div>
+    </div>
+    <hr/>
+    <div id="refreshProgressContent"></div>
+    <div class="modal-footer">
+	 		<button type="button" class="btn" onclick="stopRepublicPushRecords();">结束</button>
+	</div>
+    </div>
+ </div>
 </body>
 <script src="/js/jquery.js"></script>
 <script  src="/js/bootstrap-modal.js" type="text/javascript"></script>
 <script src="/js/bootstrap-dropdown.js"></script>
 <script src="/js/bootstrap-button.js"></script>
 <script type="text/javascript">
+	function goPage(){
+		var goPageNum = $('#goPageNum').val();
+		var goPageSize = $('#goPageSize').val();
+		if(!$.isNumeric(goPageNum )){
+			alert("只能输入数字");
+			return;
+		} 
+		var goUrl = "/admin/topic/topicPage.do?type=${type }&topicid=${topicid}&pageNum="+goPageNum+"&pageSize="+goPageSize;
+		$('#goPage').attr('href',goUrl);
+		$('#goPageContent').click();
+		
+	}
+
 	function showAddSubTopic(parentTopicid){
 		$('#addParentTopicid').val(parentTopicid);
 		$('#addTopic').modal('show');
@@ -262,6 +296,7 @@
 		$('#modifyTopic').modal('show');
 		$.getJSON("/admin/topic/getTopicInfo.do?topicid="+topicid, function(json){
 			$('#modifyTopicName').val(json.topicName);
+			$('#modifyTopicNav').val(json.topicNav);
 				}); 
 	}
 	
@@ -384,6 +419,17 @@
 		}
 	}
 	
+	function fullDeletePushRecords(){
+		if(confirm('确认完全删除所选文章')){
+			if($('input[name="pushRecordSelect"]:checked').length>0){
+				$('#dolot').attr('action','/admin/topic/deletePushRecordWithDocs.do');
+				$('#dolot').submit();
+			}else{
+				alert('请选择一篇文章');
+			}
+		}
+	}
+	
 	function deleteModels(){
 		if(confirm('确认删除所选模板')){
 			if($('input[name="modelSelect"]:checked').length>0){
@@ -421,5 +467,50 @@
 				$('#dolot').attr('action','/admin/topic/pastePushRecord.do');
 				$('#dolot').submit();
 	}
+	
+	//批量刷新推送记录
+	function republicPushRecords(){
+		if($('input[name="pushRecordSelect"]:checked').length>0){
+			$('#republicProgress').modal('show');
+			var postLen = $('input[name="pushRecordSelect"]:checked').length;
+			var content = "";
+			for(var i=0;i<postLen;i++){
+				var postid =$($('input[name="pushRecordSelect"]:checked')[i]).val();
+				$.ajax({
+	                url : 'republicPushRecord.do',
+	                data:{'indexid':postid},
+	                cache : false,
+	                async : false,
+	                type : "POST",
+	                dataType : 'json',
+	                success : function (result){
+	                	if(result.result=='success'){
+	                		content+=postid+"刷新成功<br/>";
+	                		$('#refreshProgressContent').html(content);
+						}else{
+							content+=postid+"刷新失败<br/>";
+	                		$('#refreshProgressContent').html(content);
+						}
+						$('#refreshProgress').css('width',(i+1)/postLen*100+'%');
+						if(postLen>(i+1)){
+							$('#refreshProgress').html('刷新中('+(i+1)+'/'+postLen+')');
+						}else{
+							$('#refreshProgress').html('完成');
+						}
+	                }
+	            });
+			}
+		}else{
+			alert('请选择一篇文章');
+		}
+	}
+	
+	function stopRepublicPushRecords(){
+		$('#republicProgress').modal('hide');
+		$('#refreshProgress').css('width','0%');
+		$('#refreshProgress').html('');
+		$('#refreshProgressContent').html('');
+	}
+	
 </script>
 </html>
