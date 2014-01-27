@@ -61,7 +61,7 @@ public class Page {
     }else{
       prePage = 1;
     }
-    if (totalNum > currentPage) {
+    if (totalPage > currentPage) {
       nextPage = currentPage + 1;
     } else {
       nextPage = currentPage;
@@ -73,7 +73,9 @@ public class Page {
   }
 
   public void setPageSize(int pageSize) {
-    this.pageSize = pageSize;
+    if (pageSize > 0) {
+      this.pageSize = pageSize;
+    }
     countTotalPageNum();
   }
 

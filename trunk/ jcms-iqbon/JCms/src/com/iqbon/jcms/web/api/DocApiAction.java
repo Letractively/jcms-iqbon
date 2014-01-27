@@ -4,12 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -19,12 +19,13 @@ import com.iqbon.jcms.service.DocService;
 import com.iqbon.jcms.service.PushRecordService;
 import com.iqbon.jcms.util.JCMSConstant;
 import com.iqbon.jcms.web.DocAction;
+import com.iqbon.jcms.web.api.interf.DocApi;
 import com.iqbon.jcms.web.util.JCMSAction;
 
 @Controller
 @Scope("prototype")
 @RequestMapping("/api/doc")
-public class DocApiAction extends JCMSAction {
+public class DocApiAction extends JCMSAction implements DocApi {
 
   private final static Logger logger = Logger.getLogger(DocAction.class);
 
@@ -34,8 +35,9 @@ public class DocApiAction extends JCMSAction {
   @Autowired
   private PushRecordService pushRecordService;
   
-  @RequestMapping(value = "/add", method = RequestMethod.POST)
+  @RequestMapping(value = "/add.do")
   @ResponseBody
+  @Override
   public Map<String, String> addDoc(@RequestParam("topicid")
   String topicid,@RequestParam("type")
   int type, @RequestParam("title")
@@ -62,8 +64,18 @@ public class DocApiAction extends JCMSAction {
     doc.setStatus(Doc.docStatus.unPublish.ordinal());
     String url = JCMSConstant.createDocUrl(docid, Doc.docType.normal.ordinal());
     doc.setUrl(url);
-    int number = docService.addDoc(doc);
+    logger.info("增加文章：" + ToStringBuilder.reflectionToString(doc));
+    int number = 0;
+    try {
+      number = docService.addDoc(doc);
+    } catch (Exception e) {
+      logger.error("添加文章失败", e);
+      result.put(APIConstant.K_RESULT, APIConstant.V_FAIL);
+      result.put(APIConstant.K_MESSAGE, "添加文章失败");
+      return result;
+    }
     if (number > 0) {//增加推送记录
+
       PushRecord pushRecord = new PushRecord();
       pushRecord.setIndexid(JCMSConstant.createPushRecordId());
       pushRecord.setDocid(docid);
@@ -73,7 +85,14 @@ public class DocApiAction extends JCMSAction {
       pushRecord.setTopicid(topicid);
       pushRecord.setType(PushRecord.PUSH_RECORD_TYPE.doc.ordinal());
       pushRecord.setUrl(url);
-      number = pushRecordService.addPushRecord(pushRecord);
+      logger.info("增加文章成功，增加推送记录：" + ToStringBuilder.reflectionToString(pushRecord));
+      try{
+        number = pushRecordService.addPushRecord(pushRecord);
+      }catch(Exception e){
+        logger.error("添加推送记录失败", e);
+        result.put(APIConstant.K_RESULT, APIConstant.V_FAIL);
+        result.put(APIConstant.K_MESSAGE, "添加推送记录失败");
+      }
       if (number <= 0) {
         result.put(APIConstant.K_RESULT, APIConstant.V_FAIL);
         result.put(APIConstant.K_MESSAGE, "添加推送记录失败");

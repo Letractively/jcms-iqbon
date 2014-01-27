@@ -7,8 +7,10 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -25,6 +27,8 @@ import com.iqbon.jcms.domain.mapRow.PushRecordMapper;
  */
 @Repository
 public class PushRecordDAO {
+
+  private Logger logger = Logger.getLogger(PushRecordDAO.class);
 
   private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
   
@@ -44,7 +48,7 @@ public class PushRecordDAO {
   public List<PushRecord> queryDocPushRecordByTopic(String topicid, int begin,
       int size) {
     String sql = "select indexid,docid,modelname,title,lspri,url,sub_title,add_date,last_modify,modify_user,topicid,type,img "
-        + "from bu_push_record where  topicid = :topicid  order by add_date desc,lspri desc,last_modify desc limit :begin,:size";
+        + "from bu_push_record where  topicid = :topicid  order by lspri desc, add_date desc,last_modify desc limit :begin,:size";
     Map<String, Object> map = new HashMap<String, Object>(3);
     map.put("topicid", topicid);
     map.put("begin", begin);
@@ -99,8 +103,8 @@ public class PushRecordDAO {
    * @return
    */
   public int insertPushRecord(PushRecord pushRecord) {
-    String sql = "insert into bu_push_record(docid,modelname,title,lspri,url,sub_title,add_date,last_modify,modify_user,topicid,type,img )"
-        + " values(:docid,:modelName,:title,:lspri,:url,:subTitle,now(),now(),:modifyUser,:topicid,:type,:img)";
+    String sql = "insert into bu_push_record(indexid,docid,modelname,title,lspri,url,sub_title,add_date,last_modify,modify_user,topicid,type,img )"
+        + " values(:indexid,:docid,:modelName,:title,:lspri,:url,:subTitle,now(),now(),:modifyUser,:topicid,:type,:img)";
     SqlParameterSource paramMap = new BeanPropertySqlParameterSource(pushRecord);
     return namedParameterJdbcTemplate.update(sql, paramMap);
   }
@@ -117,16 +121,21 @@ public class PushRecordDAO {
     return namedParameterJdbcTemplate.update(sql, map);
   }
 
+
   /**
    * 根据栏目ID、推送类型，获取栏目下文章的推送记录数量
    * @param topicid
+   * @param type 0普通推送，1模板推送
    * @return
    */
   public int queryPushRecordNumByTopicAndType(String topicid, int type) {
-    String sql = "select count(indexid) from bu_push_record where type = :type and topicid = :topicid";
+    String sql = "select count(indexid) from bu_push_record where topicid = :topicid";
     Map<String, Object> map = new HashMap<String, Object>(2);
     map.put("topicid", topicid);
-    map.put("type", type);
+    if (type == 1) {
+      map.put("type", type);
+      sql += " and type = 2";
+    }
     return namedParameterJdbcTemplate.queryForInt(sql, map);
   }
 
@@ -165,7 +174,12 @@ public class PushRecordDAO {
     String sql = "select * from bu_push_record where indexid=:indexid";
     Map<String, String> map = new HashMap<String, String>(1);
     map.put("indexid", indexid);
+    try{
     return namedParameterJdbcTemplate.queryForObject(sql, map, new PushRecordMapper());
+    }catch(EmptyResultDataAccessException e){
+      logger.info("根据ID(" + indexid + ")查找推送记录信息为空");
+      return null;
+    }
   }
 
   /**
@@ -232,7 +246,7 @@ public class PushRecordDAO {
     Map<String, Object> map = new HashMap<String, Object>();
     map.put("docid", docid);
     String sql = "select indexid,docid,modelname,title,lspri,url,sub_title,add_date,last_modify,modify_user,topicid,type,img "
-        + "from bu_push_record where  docid = :docid ";
+        + "from bu_push_record where  docid = :docid order by last_modify";
     return namedParameterJdbcTemplate.query(sql, map, new PushRecordMapper());
   }
 }

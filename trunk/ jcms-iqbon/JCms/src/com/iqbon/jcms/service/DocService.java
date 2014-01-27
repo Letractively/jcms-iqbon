@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -129,6 +130,11 @@ public class DocService {
     PushRecord pushRecord = new PushRecord();
     if (StringUtils.isNotBlank(indexid)) {
       pushRecord = pushRecordDAO.queryPushRecordById(indexid);
+    } else {//如果没有传indexid，获取文章的第一个推送记录
+      List<PushRecord> pushList = pushRecordDAO.queryPushRecordByDocid(docid);
+      if (CollectionUtils.isNotEmpty(pushList)) {
+        pushRecord = pushList.get(0);
+      }
     }
 
     String modelName = doc.getModelName();
