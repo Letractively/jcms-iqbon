@@ -38,6 +38,7 @@ public class ParseModelJob implements Job {
       List<String> modelIdList = modelService.getNeedPublishModelByRefresh(refresh);
       for (String modelName : modelIdList) {
         try {
+          logger.info("刷新模板" + modelName);
           Model model = modelService.getModelInfoByModelName(modelName);
           modelService.publishModelContent(model);
         } catch (IOException e) {

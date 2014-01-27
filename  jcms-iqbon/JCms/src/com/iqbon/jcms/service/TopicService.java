@@ -126,4 +126,14 @@ public class TopicService {
   public int batchDeleteTopics(List<String> topicList) {
     return topicDAO.batchDeleteTopic(topicList);
   }
+
+  /**
+   * 修改栏目下面子栏目的栏目导航
+   * @param parentId
+   * @param topicNav
+   * @return
+   */
+  public int modifySubTopicNav(String parentId, String topicNav) {
+    return topicDAO.updateSubTopicNav(parentId, topicNav);
+  }
 }

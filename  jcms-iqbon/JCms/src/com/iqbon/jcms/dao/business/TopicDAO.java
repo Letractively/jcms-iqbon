@@ -120,4 +120,18 @@ public class TopicDAO {
     SqlParameterSource paramMap = new BeanPropertySqlParameterSource(topic);
     return namedParameterJdbcTemplate.update(sql, paramMap);
   }
+
+  /**
+   * 更新子栏目的栏目导航
+   * @param parentId
+   * @param topicNav
+   * @return
+   */
+  public int updateSubTopicNav(String parentId, String topicNav) {
+    String sql = "update bu_topic set topic_nav=:topicNav where parent_topic = :parentId  ";
+    Map<String, String> map = new HashMap<String, String>();
+    map.put("parentId", parentId);
+    map.put("topicNav", topicNav);
+    return namedParameterJdbcTemplate.update(sql, map);
+  }
 }

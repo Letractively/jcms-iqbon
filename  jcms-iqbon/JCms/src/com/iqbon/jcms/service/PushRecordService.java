@@ -40,7 +40,7 @@ public class PushRecordService {
   /**
    * 根据栏目ID、推送类型，获取栏目下文章的推送记录数量
    * @param topicid
-   * @param type
+   * @param type 0普通推送，1模板推送
    * @return
    */
   public int getPushRecordNumByTopicAndType(String topicid, int type) {

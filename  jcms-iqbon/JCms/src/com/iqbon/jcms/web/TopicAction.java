@@ -1,6 +1,7 @@
 package com.iqbon.jcms.web;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -95,7 +96,10 @@ public class TopicAction extends JCMSAction {
    */
   @RequestMapping(value = "/topicPage.do")
   public ModelAndView topicPage(@RequestParam("topicid") String topicid,
-      @RequestParam("pageNum") int pageNum, @RequestParam("type") int type) {
+ @RequestParam("pageNum")
+  int pageNum, @RequestParam(value = "pageSize", required = false)
+  Integer pageSize, @RequestParam("type")
+  int type) {
     ModelAndView mav = new ModelAndView();
     if (pageNum <= 0) {
       pageNum = 1;
@@ -104,6 +108,9 @@ public class TopicAction extends JCMSAction {
     List<Topic> subTopicList = topicService.getSubTopicList(topicid);
     int totalNum = pushRecordService.getPushRecordNumByTopicAndType(topicid, type);
     Page page = new Page(totalNum, pageNum);
+    if (pageSize != null) {
+      page.setPageSize(pageSize);
+    }
     int totalPageNum = page.getTotalPage();
     if (type == ViewMode.doc.ordinal()) {
       List<PushRecord> pushRecordList = pushRecordService.getPushRecordByTopicid(topicid,
@@ -119,6 +126,7 @@ public class TopicAction extends JCMSAction {
     mav.addObject("pageNum", pageNum);
     mav.addObject("nextPageNum", page.getNextPage());
     mav.addObject("prePageNum", page.getPrePage());
+    mav.addObject("pageSize", page.getPageSize());
     mav.addObject("type", type);
     mav.addObject("topicid", topicid);
     mav.addObject("topic", topic);
@@ -163,7 +171,7 @@ public class TopicAction extends JCMSAction {
     }
     try {
       topicService.addTopic(parentTopicid, topicName, topicNav, user.getUserName());
-      return this.topicPage(parentTopicid, pageNum, type);
+      return this.topicPage(parentTopicid, pageNum, 0, type);
     } catch (Exception e) {
       logger.error("新建子栏目失败，parentTopicid=" + parentTopicid + " topicName=" + topicName + " user="
           + user, e);
@@ -192,7 +200,7 @@ public class TopicAction extends JCMSAction {
     }
     try {
       topicService.batchDeleteTopics(Arrays.asList(topicSelect));
-      return this.topicPage(topicid, pageNum, type);
+      return this.topicPage(topicid, pageNum, 0, type);
     } catch (Exception e) {
       logger.error("删除子栏目失败，topicid=" + topicid + " user=" + user, e);
       return errorMav;
@@ -223,8 +231,9 @@ public class TopicAction extends JCMSAction {
   @RequestMapping(value = "/modifyTopic.do")
   public ModelAndView modifyTopic(@RequestParam("topicid")
   String topicid, @RequestParam("topicName")
-  String topicName, @RequestParam("topicNav")
-  String topicNav, @RequestParam(value = "pageNum", required = false)
+  String topicName, @RequestParam(value = "topicNav", required = false)
+  String topicNav, @RequestParam(value = "toSubTopic", required = false)
+  boolean topicSubTopic, @RequestParam(value = "pageNum", required = false)
   int pageNum, @RequestParam(value = "type", required = false)
   int type, HttpSession session) {
     User user = getUserFromSession(session);
@@ -233,8 +242,11 @@ public class TopicAction extends JCMSAction {
       return errorMav;
     }
     int number = topicService.modifyTopic(topicName, topicid, topicNav, user.getUserName());
+    if (topicSubTopic) {
+      topicService.modifySubTopicNav(topicid, topicNav);
+    }
     if (number > 0) {
-      return this.topicPage(topicid, pageNum, type);
+      return this.topicPage(topicid, pageNum, 0, type);
     }
     return errorMav;
   }
@@ -268,7 +280,7 @@ public class TopicAction extends JCMSAction {
     int number = pushRecordService.addBlankDoc(title, subTitle, url, topicid, lspri,
         user.getUserName(), img);
     if (number > 0) {
-      return this.topicPage(topicid, pageNum, type);
+      return this.topicPage(topicid, pageNum, 0, type);
     }
     return errorMav;
   }
@@ -292,7 +304,7 @@ public class TopicAction extends JCMSAction {
     }
     int number = pushRecordService.updateLspri(indexid, lspri, user.getUserName());
     if (number > 0) {
-      return this.topicPage(topicid, pageNum, type);
+      return this.topicPage(topicid, pageNum, 0, type);
     }
     return errorMav;
   }
@@ -391,7 +403,7 @@ public class TopicAction extends JCMSAction {
     pushRecord.setTopicid(topicid);
     int number = pushRecordService.updatePushRecord(pushRecord);
     if (number > 0) {
-      return this.topicPage(topicid, pageNum, type);
+      return this.topicPage(topicid, pageNum, 0, type);
     }
     return errorMav;
   }
@@ -417,11 +429,53 @@ public class TopicAction extends JCMSAction {
     }
     int number = pushRecordService.deletePushRecords(Arrays.asList(indexid));
     if (number > 0) {
-      return this.topicPage(topicid, pageNum, type);
+      return this.topicPage(topicid, pageNum, 0, type);
     }
     return errorMav;
   }
 
+  /**
+   * 批量删除推送记录,及其相关内容
+   * @param indexids
+   * @param topicid
+   * @param pageNum
+   * @param type
+   * @param session
+   * @return
+   */
+  @RequestMapping(value = "/deletePushRecordWithDocs.do")
+  public ModelAndView deletePushRecordWithDocs(@RequestParam("pushRecordSelect")
+  String[] indexids, @RequestParam("topicid")
+  String topicid, @RequestParam(value = "pageNum", required = false)
+  int pageNum, @RequestParam(value = "type", required = false)
+  int type, HttpSession session) {
+    User user = getUserFromSession(session);
+    if (user == null) {
+      return errorMav;
+    }
+    int number = 0;
+    for (String indexid : indexids) {
+      PushRecord pushRecord = pushRecordService.getPushRecordById(indexid);
+      if (pushRecord.getType() == PushRecord.PUSH_RECORD_TYPE.doc.ordinal()) {//普通文章的推送记录
+        number = docService.deleteDoc(pushRecord.getDocid(), user.getUserName());
+      } else if (pushRecord.getType() == PushRecord.PUSH_RECORD_TYPE.emptyDoc.ordinal()) {//空文章
+        List<String> deleteIndexid = new ArrayList<String>();
+        deleteIndexid.add(indexid);
+        number = pushRecordService.deletePushRecords(deleteIndexid);
+      } else if (pushRecord.getType() == PushRecord.PUSH_RECORD_TYPE.model.ordinal()) {//模板
+        String modelName = pushRecord.getModelName();
+        List<String> deleteIndexid = new ArrayList<String>();
+        deleteIndexid.add(indexid);
+        number = pushRecordService.deletePushRecords(deleteIndexid);
+        modelService.deleteModel(modelName, user.getUserName());
+      }
+    }
+    if (number > 0) {
+      return this.topicPage(topicid, pageNum, 0, type);
+    }
+    return errorMav;
+  }
+  
   /**
    * 批量删除模板
    * @param modelNames
@@ -444,7 +498,7 @@ public class TopicAction extends JCMSAction {
     }
     int number = modelService.deleteModels(Arrays.asList(modelNames), user.getUserName());
     if (number > 0) {
-      return this.topicPage(topicid, pageNum, type);
+      return this.topicPage(topicid, pageNum, 0, type);
     }
     return errorMav;
   }
@@ -463,7 +517,7 @@ public class TopicAction extends JCMSAction {
   int type, HttpSession session) {
     session.setAttribute(KeyConstant.SESSION_KEY_COPY_INDEX, indexid);
     session.setAttribute(KeyConstant.SESSION_KEY_COPY_TYPE, CopyType.copy);
-    return this.topicPage(topicid, pageNum, type);
+    return this.topicPage(topicid, pageNum, 0, type);
   }
   
   /**
@@ -480,7 +534,7 @@ public class TopicAction extends JCMSAction {
   int type, HttpSession session) {
     session.setAttribute(KeyConstant.SESSION_KEY_COPY_INDEX, indexid);
     session.setAttribute(KeyConstant.SESSION_KEY_COPY_TYPE, CopyType.cut);
-    return this.topicPage(topicid, pageNum, type);
+    return this.topicPage(topicid, pageNum, 0, type);
   }
 
   /**
@@ -505,7 +559,7 @@ public class TopicAction extends JCMSAction {
       number = pushRecordService.cutPushRecords(Arrays.asList(indexid), topicid);
     }
     if (number > 0) {
-      return this.topicPage(topicid, pageNum, type);
+      return this.topicPage(topicid, pageNum, 0, type);
     }
     return errorMav;
   }
