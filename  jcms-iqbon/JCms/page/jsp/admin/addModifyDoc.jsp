@@ -45,7 +45,9 @@
 	</div>
 </div>
 <div style="padding-top: 10px;padding-right: 20px;margin-top: 6px;width: 17% ;float: right;">
-	<div>当前状态：<c:if test="${doc.status==0 }">未发布</c:if><c:if test="${doc.status==1 }">发布</c:if></div>
+	<div>当前状态：
+	<c:if test="${doc.delete == 1 }">删除</c:if><c:if test="${doc.delete == 0 }">未删除</c:if>&nbsp;&nbsp;|&nbsp;&nbsp;
+	<c:if test="${doc.status==0 }">未发布</c:if><c:if test="${doc.status==1 }">发布</c:if></div>
 	<div class="form-inline ">
 		<label>文章模板:</label>
 		<select name="modelName" class="span2">
