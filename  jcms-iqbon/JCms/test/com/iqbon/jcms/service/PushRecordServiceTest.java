@@ -61,4 +61,9 @@ public class PushRecordServiceTest extends TestCase {
     //
     //    int number = pushRecordService.addPushRecord(pushRecord);
   }
+
+  public void testGetPushRecordNumByTopicAndType() {
+    int totalNum = pushRecordService.getPushRecordNumByTopicAndType("1309050043000012EW", 0);
+    logger.info(totalNum);
+  }
 }
