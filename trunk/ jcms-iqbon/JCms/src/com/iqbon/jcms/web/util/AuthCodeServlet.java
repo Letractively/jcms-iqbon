@@ -29,11 +29,11 @@ public class AuthCodeServlet extends HttpServlet {
   /**
    * 验证码图片的宽度
    */
-  private int width = 100;
+  private int width = 110;
   /**
    * 验证码图片的高度
    */
-  private int height = 30;
+  private int height = 40;
   /**
    * 验证码字符个数
    */
@@ -86,14 +86,14 @@ public class AuthCodeServlet extends HttpServlet {
     // 将图像填充为白色
     g.setColor(Color.WHITE);
     g.fillRect(0, 0, width, height);
- // 创建字体，字体的大小应该根据图片的高度来定。
+    // 创建字体，字体的大小应该根据图片的高度来定。
     Font font = new Font("Fixedsys", Font.PLAIN, fontHeight);
     // 设置字体。
     g.setFont(font);
     // 画边框。
     g.setColor(Color.BLACK);
     g.drawRect(0, 0, width - 1, height - 1);
- // 随机产生30条干扰线，使图象中的认证码不易被其它程序探测到。
+    // 随机产生30条干扰线，使图象中的认证码不易被其它程序探测到。
     g.setColor(Color.BLACK);
     for (int i = 0; i < 30; i++) {
       int x = random.nextInt(width);
